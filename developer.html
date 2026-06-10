@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developer Console</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--navy:#1F3864;--blue:#2E75B6;--bg:#0f1e35;--card:#162844;--border:#243a5e;--text:#e8edf5;--muted:#8aa0bd;--green:#4caf7d;--orange:#f59e0b;--red:#ef4444;--purple:#a78bfa;}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem;}
+  header{margin-bottom:2rem;}
+  .brand{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
+  h1{font-size:1.5rem;font-weight:700;}
+  .dev-badge{display:inline-block;background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple);border-radius:5px;font-size:.7rem;font-weight:700;padding:.2rem .6rem;letter-spacing:.1em;margin-left:.6rem;vertical-align:middle;}
+  .grid{display:grid;grid-template-columns:300px 1fr;gap:1.5rem;align-items:start;}
+  @media(max-width:800px){.grid{grid-template-columns:1fr;}}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;}
+  .card h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);}
+  button{padding:.55rem 1rem;border:none;border-radius:7px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .15s;}
+  button:hover{opacity:.85;}
+  .btn-blue{background:var(--blue);color:#fff;}.btn-red{background:var(--red);color:#fff;}
+  .btn-orange{background:var(--orange);color:#fff;}.btn-muted{background:var(--border);color:var(--text);}
+  .btn-purple{background:var(--purple);color:#fff;}.btn-sm{padding:.3rem .65rem;font-size:.75rem;}
+  .section-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;}
+  table{width:100%;border-collapse:collapse;font-size:.82rem;}
+  thead th{background:var(--navy);padding:.75rem 1rem;text-align:left;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+  tbody tr{border-bottom:1px solid var(--border);}tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:rgba(46,117,182,.07);}
+  td{padding:.65rem 1rem;}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted);}
+  .etype{display:inline-block;padding:.15rem .55rem;border-radius:4px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+  .etype-clock_in{background:rgba(76,175,125,.15);color:var(--green);}
+  .etype-clock_out{background:rgba(239,68,68,.15);color:var(--red);}
+  .etype-break_start,.etype-break_end{background:rgba(245,158,11,.15);color:var(--orange);}
+  .etype-lunch_start,.etype-lunch_end{background:rgba(167,139,250,.15);color:var(--purple);}
+  .inject-form{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.8rem;}
+  .inject-form input,.inject-form select{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:.5rem .75rem;font-family:'Inter',sans-serif;font-size:.82rem;outline:none;}
+  .inject-form input:focus,.inject-form select:focus{border-color:var(--blue);}
+  .inject-form .full{grid-column:span 2;}
+  .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--green);color:var(--green);padding:.7rem 1.2rem;border-radius:8px;font-size:.85rem;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
+  .toast.show{opacity:1;}
+  .danger-zone{border-color:rgba(239,68,68,.3);}.danger-zone h2{color:rgba(239,68,68,.7);}
+  .nav-links{margin-top:2rem;font-size:.78rem;color:var(--muted);display:flex;gap:1rem;}
+  .nav-links a{color:var(--blue);text-decoration:none;}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">GoAnswer · Time Clock</div>
+  <h1>Developer Console <span class="dev-badge">DEV</span></h1>
+</header>
+
+<div class="grid">
+  <div>
+    <div class="card">
+      <h2>Inject Event</h2>
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:.75rem;">Manually add a time entry to correct records.</p>
+      <div class="inject-form">
+        <input type="text" id="injectName" placeholder="Agent name" class="full">
+        <select id="injectType">
+          <option value="clock_in">Clock In</option>
+          <option value="clock_out">Clock Out</option>
+          <option value="break_start">Break Start</option>
+          <option value="break_end">Break End</option>
+          <option value="lunch_start">Lunch Start</option>
+          <option value="lunch_end">Lunch End</option>
+        </select>
+        <input type="datetime-local" id="injectTime">
+        <button class="btn-purple full" onclick="injectEvent()">Add Event</button>
+      </div>
+    </div>
+    <div class="card danger-zone">
+      <h2>⚠ Danger Zone</h2>
+      <div class="section-actions" style="flex-direction:column">
+        <button class="btn-orange" onclick="clearToday()" style="width:100%">Clear Today's Events</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Recent Events (last 500)</h2>
+    <div class="section-actions">
+      <button class="btn-muted" onclick="loadEvents()">Refresh</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>ID</th><th>Agent</th><th>Event</th><th>Timestamp</th><th>Date</th><th></th></tr></thead>
+        <tbody id="eventsBody"><tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--muted)">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="nav-links">
+  <span>Agent: <a href="agent.html">agent.html</a></span>
+  <span>Supervisor: <a href="supervisor.html">supervisor.html</a></span>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const SUPABASE_URL      = "https://fmnvpaynzcshcfyojvul.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtbnZwYXluemNzaGNmeW9qdnVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDc5NjgsImV4cCI6MjA5NjY4Mzk2OH0.Ib9fgnWF9wOB2napqTUygrdIP0pIjNy9TVJMZrRDz64";
+  const SB_HEADERS = {'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
+
+  function todayStr(){return new Date().toISOString().slice(0,10);}
+  const nowDT=new Date();nowDT.setSeconds(0,0);
+  document.getElementById('injectTime').value=nowDT.toISOString().slice(0,16);
+
+  function toast(msg,color='var(--green)'){
+    const el=document.getElementById('toast');
+    el.textContent=msg;el.style.borderColor=color;el.style.color=color;
+    el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);
+  }
+
+  async function loadEvents(){
+    const res=await fetch(SUPABASE_URL+'/rest/v1/events?order=id.desc&limit=500',{headers:SB_HEADERS});
+    const events=await res.json();
+    const tbody=document.getElementById('eventsBody');
+    if(!events.length){tbody.innerHTML='<tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--muted)">No events yet.</td></tr>';return;}
+    tbody.innerHTML=events.map(e=>'<tr><td class="mono">'+e.id+'</td><td>'+e.agent_name+'</td><td><span class="etype etype-'+e.event_type+'">'+e.event_type.replace(/_/g,' ')+'</span></td><td class="mono">'+e.timestamp+'</td><td class="mono">'+e.event_date+'</td><td><button class="btn-sm btn-red" onclick="deleteEvent('+e.id+')">✕</button></td></tr>').join('');
+  }
+
+  async function deleteEvent(id){
+    if(!confirm('Delete this event?'))return;
+    await fetch(SUPABASE_URL+'/rest/v1/events?id=eq.'+id,{method:'DELETE',headers:SB_HEADERS});
+    toast('Event deleted','var(--orange)');loadEvents();
+  }
+
+  async function clearToday(){
+    if(!confirm('Delete ALL events from today? This cannot be undone.'))return;
+    await fetch(SUPABASE_URL+'/rest/v1/events?event_date=eq.'+todayStr(),{method:'DELETE',headers:SB_HEADERS});
+    toast("Today's events cleared",'var(--orange)');loadEvents();
+  }
+
+  async function injectEvent(){
+    const name=document.getElementById('injectName').value.trim();
+    const etype=document.getElementById('injectType').value;
+    const dt=document.getElementById('injectTime').value;
+    if(!name){toast('Enter agent name','var(--red)');return;}
+    const nameTitled=name.replace(/\b\w/g,c=>c.toUpperCase());
+    const timestamp=dt.replace('T',' ')+':00';
+    const event_date=dt.slice(0,10);
+    const res=await fetch(SUPABASE_URL+'/rest/v1/events',{
+      method:'POST',headers:{...SB_HEADERS,'Prefer':'return=minimal'},
+      body:JSON.stringify({agent_name:nameTitled,event_type:etype,timestamp,event_date})
+    });
+    if(res.ok){toast('Injected: '+etype+' for '+nameTitled,'var(--purple)');loadEvents();}
+    else toast('Failed to inject','var(--red)');
+  }
+
+  loadEvents();
+</script>
+</body>
+</html>
