@@ -58,8 +58,6 @@
   .lt-clock_in{color:var(--green);}.lt-clock_out{color:var(--red);}
   .lt-break_start,.lt-break_end{color:var(--orange);}
   .lt-lunch_start,.lt-lunch_end{color:var(--purple);}
-  .nav-links{margin-top:2rem;display:flex;gap:1rem;font-size:.78rem;color:var(--muted);}
-  .nav-links a{color:var(--blue);text-decoration:none;}
 </style>
 </head>
 <body>
@@ -98,158 +96,158 @@
   </div>
 </div>
 
-<div class="nav-links">
-  <span>Supervisor: <a href="supervisor.html">supervisor.html</a></span>
-  <span>Developer: <a href="developer.html">developer.html</a></span>
-</div>
-
 <script>
   const SUPABASE_URL      = "https://fmnvpaynzcshcfyojvul.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtbnZwYXluemNzaGNmeW9qdnVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDc5NjgsImV4cCI6MjA5NjY4Mzk2OH0.Ib9fgnWF9wOB2napqTUygrdIP0pIjNy9TVJMZrRDz64";
+  const SB_HEADERS = {'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
 
-  const SB_HEADERS = {
-    'Content-Type': 'application/json',
-    'apikey': SUPABASE_ANON_KEY,
-    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
-  };
-
-  let state = null, workSec = 0, breakSec = 0, lunchSec = 0, ticker = null;
-
-  function todayStr() { return new Date().toISOString().slice(0,10); }
-  function nowStr()   { return new Date().toISOString().replace('T',' ').slice(0,19); }
-  function fmtHMS(s)  { return [Math.floor(s/3600),Math.floor((s%3600)/60),Math.floor(s%60)].map(v=>String(v).padStart(2,'0')).join(':'); }
+  // Belize time (UTC-6, no DST)
+  function bzNow()    { return new Date(Date.now() - 6*3600000); }
+  function todayStr() { return bzNow().toISOString().slice(0,10); }
+  function nowStr()   { return bzNow().toISOString().slice(0,19).replace('T',' '); }
+  function fmtHMS(s)  {
+    s = Math.max(0, Math.floor(s));
+    return [Math.floor(s/3600),Math.floor((s%3600)/60),s%60].map(v=>String(v).padStart(2,'0')).join(':');
+  }
   function showMsg(txt,err=true){ const el=document.getElementById('msg'); el.style.color=err?'var(--red)':'var(--green)'; el.textContent=txt; }
   function setSpinner(on){ document.getElementById('spinner').classList.toggle('show',on); }
 
-  async function sbGet(params) {
-    const res = await fetch(SUPABASE_URL+'/rest/v1/events?'+params, { headers: SB_HEADERS });
+  let state=null, workSec=0, breakSec=0, lunchSec=0, ticker=null;
+  // Track the JS Date when we started counting so drift doesn't accumulate
+  let tickStart=null, tickBase={w:0,b:0,l:0};
+
+  async function sbGet(params){
+    const res=await fetch(SUPABASE_URL+'/rest/v1/events?'+params,{headers:SB_HEADERS});
     return res.json();
   }
-  async function sbPost(body) {
-    const res = await fetch(SUPABASE_URL+'/rest/v1/events', {
-      method: 'POST',
-      headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' },
-      body: JSON.stringify(body)
+  async function sbPost(body){
+    const res=await fetch(SUPABASE_URL+'/rest/v1/events',{
+      method:'POST',headers:{...SB_HEADERS,'Prefer':'return=minimal'},body:JSON.stringify(body)
     });
     return res.ok;
   }
 
-  function computeTotals(events) {
+  function computeTotals(events){
     let ws=0,bs=0,ls=0,status='not_clocked_in',ci=null,bst=null,lst=null;
-    for (const ev of events) {
-      const ts = new Date(ev.timestamp);
-      if      (ev.event_type==='clock_in')    { ci=ts; status='working'; }
-      else if (ev.event_type==='clock_out')   { if(ci)ws+=(ts-ci)/1000; ci=null; status='clocked_out'; }
-      else if (ev.event_type==='break_start') { if(ci)ws+=(ts-ci)/1000; ci=null; bst=ts; status='on_break'; }
-      else if (ev.event_type==='break_end')   { if(bst)bs+=(ts-bst)/1000; bst=null; ci=ts; status='working'; }
-      else if (ev.event_type==='lunch_start') { if(ci)ws+=(ts-ci)/1000; ci=null; lst=ts; status='on_lunch'; }
-      else if (ev.event_type==='lunch_end')   { if(lst)ls+=(ts-lst)/1000; lst=null; ci=ts; status='working'; }
+    for(const ev of events){
+      // Parse timestamp as Belize local time
+      const ts=new Date(ev.timestamp.replace(' ','T')+'-06:00');
+      if      (ev.event_type==='clock_in')    {ci=ts;status='working';}
+      else if (ev.event_type==='clock_out')   {if(ci)ws+=(ts-ci)/1000;ci=null;status='clocked_out';}
+      else if (ev.event_type==='break_start') {if(ci)ws+=(ts-ci)/1000;ci=null;bst=ts;status='on_break';}
+      else if (ev.event_type==='break_end')   {if(bst)bs+=(ts-bst)/1000;bst=null;ci=ts;status='working';}
+      else if (ev.event_type==='lunch_start') {if(ci)ws+=(ts-ci)/1000;ci=null;lst=ts;status='on_lunch';}
+      else if (ev.event_type==='lunch_end')   {if(lst)ls+=(ts-lst)/1000;lst=null;ci=ts;status='working';}
     }
+    // Add open interval using server-recorded last event time vs now
     const now=new Date();
-    if(ci&&status==='working')  ws+=(now-ci)/1000;
-    if(bst&&status==='on_break')bs+=(now-bst)/1000;
-    if(lst&&status==='on_lunch')ls+=(now-lst)/1000;
-    return { work_seconds:Math.floor(ws), break_seconds:Math.floor(bs), lunch_seconds:Math.floor(ls), status };
+    if(ci  &&status==='working')  ws+=Math.max(0,(now-ci)/1000);
+    if(bst &&status==='on_break') bs+=Math.max(0,(now-bst)/1000);
+    if(lst &&status==='on_lunch') ls+=Math.max(0,(now-lst)/1000);
+    return{work_seconds:Math.max(0,Math.floor(ws)),break_seconds:Math.max(0,Math.floor(bs)),lunch_seconds:Math.max(0,Math.floor(ls)),status};
   }
 
-  async function loadStatus() {
-    const raw = document.getElementById('agentName').value.trim();
-    if (!raw) { showMsg('Please enter your name.'); return; }
-    const name = raw.replace(/\b\w/g, c=>c.toUpperCase());
-    document.getElementById('agentName').value = name;
-    showMsg(''); setSpinner(true);
-    try {
-      const events = await sbGet('agent_name=eq.'+encodeURIComponent(name)+'&event_date=eq.'+todayStr()+'&order=id.asc');
-      const allRows = await sbGet('select=agent_name&order=agent_name.asc');
-      const unique  = [...new Set((allRows||[]).map(r=>r.agent_name))];
-      document.getElementById('knownAgents').innerHTML = unique.map(n=>'<option value="'+n+'">').join('');
-      const totals = computeTotals(events||[]);
-      applyState({ name, events: events||[], ...totals });
-    } catch(e) {
-      showMsg('Connection error: '+e.message);
-    } finally { setSpinner(false); }
+  async function loadStatus(){
+    const raw=document.getElementById('agentName').value.trim();
+    if(!raw){showMsg('Please enter your name.');return;}
+    const name=raw.replace(/\b\w/g,c=>c.toUpperCase());
+    document.getElementById('agentName').value=name;
+    showMsg('');setSpinner(true);
+    try{
+      const events=await sbGet('agent_name=eq.'+encodeURIComponent(name)+'&event_date=eq.'+todayStr()+'&order=id.asc');
+      const allRows=await sbGet('select=agent_name&order=agent_name.asc');
+      const unique=[...new Set((allRows||[]).map(r=>r.agent_name))];
+      document.getElementById('knownAgents').innerHTML=unique.map(n=>'<option value="'+n+'">').join('');
+      const totals=computeTotals(events||[]);
+      applyState({name,events:events||[],...totals});
+    }catch(e){showMsg('Connection error: '+e.message);}
+    finally{setSpinner(false);}
   }
 
-  const STATUS_LABELS = {working:'Working',on_break:'On Break',on_lunch:'On Lunch',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
-  const LOG_LABELS    = {clock_in:'Clocked In',clock_out:'Clocked Out',break_start:'Break Started',break_end:'Break Ended',lunch_start:'Lunch Started',lunch_end:'Lunch Ended'};
+  const STATUS_LABELS={working:'Working',on_break:'On Break',on_lunch:'On Lunch',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
+  const LOG_LABELS={clock_in:'Clocked In',clock_out:'Clocked Out',break_start:'Break Started',break_end:'Break Ended',lunch_start:'Lunch Started',lunch_end:'Lunch Ended'};
 
-  function applyState(data) {
-    state=data; workSec=data.work_seconds; breakSec=data.break_seconds; lunchSec=data.lunch_seconds;
+  function applyState(data){
+    state=data;
+    if(ticker)clearInterval(ticker);
+
+    // Set base values and anchor time for drift-free counting
+    tickBase={w:data.work_seconds,b:data.break_seconds,l:data.lunch_seconds};
+    tickStart=Date.now();
+
     document.getElementById('statusBox').classList.add('visible');
-    document.getElementById('greeting').textContent = 'Welcome, '+data.name;
+    document.getElementById('greeting').textContent='Welcome, '+data.name;
     const pill=document.getElementById('statusPill');
     pill.textContent=STATUS_LABELS[data.status]||data.status;
     pill.className='status-pill pill-'+data.status;
-    document.getElementById('workTimer').textContent  = fmtHMS(workSec);
-    document.getElementById('breakTimer').textContent = fmtHMS(breakSec);
-    document.getElementById('lunchTimer').textContent = fmtHMS(lunchSec);
+    updateTimerDisplay();
     renderButtons(data.status);
     renderLog(data.events);
-    if(ticker) clearInterval(ticker);
+
     if(['working','on_break','on_lunch'].includes(data.status))
       ticker=setInterval(tickTimers,1000);
   }
 
-  function tickTimers() {
+  function tickTimers(){
     if(!state)return;
-    if(state.status==='working')  workSec++;
-    if(state.status==='on_break') breakSec++;
-    if(state.status==='on_lunch') lunchSec++;
-    document.getElementById('workTimer').textContent  = fmtHMS(workSec);
-    document.getElementById('breakTimer').textContent = fmtHMS(breakSec);
-    document.getElementById('lunchTimer').textContent = fmtHMS(lunchSec);
+    const elapsed=Math.floor((Date.now()-tickStart)/1000);
+    workSec  = tickBase.w + (state.status==='working'  ? elapsed : 0);
+    breakSec = tickBase.b + (state.status==='on_break' ? elapsed : 0);
+    lunchSec = tickBase.l + (state.status==='on_lunch' ? elapsed : 0);
+    updateTimerDisplay();
   }
 
-  function mkBtn(label,cls,action,full=false) {
+  function updateTimerDisplay(){
+    document.getElementById('workTimer').textContent =fmtHMS(state?tickBase.w+(state.status==='working' ?Math.floor((Date.now()-tickStart)/1000):0):0);
+    document.getElementById('breakTimer').textContent=fmtHMS(state?tickBase.b+(state.status==='on_break'?Math.floor((Date.now()-tickStart)/1000):0):0);
+    document.getElementById('lunchTimer').textContent=fmtHMS(state?tickBase.l+(state.status==='on_lunch'?Math.floor((Date.now()-tickStart)/1000):0):0);
+  }
+
+  function mkBtn(label,cls,action,full=false){
     const b=document.createElement('button');
-    b.className=cls+(full?' btn-full':'');
-    b.textContent=label;
-    b.onclick=()=>doAction(action);
-    return b;
+    b.className=cls+(full?' btn-full':'');b.textContent=label;b.onclick=()=>doAction(action);return b;
   }
-
-  function renderButtons(status) {
-    const c=document.getElementById('actionButtons'); c.innerHTML='';
-    if(status==='not_clocked_in'||status==='clocked_out') {
+  function renderButtons(status){
+    const c=document.getElementById('actionButtons');c.innerHTML='';
+    if(status==='not_clocked_in'||status==='clocked_out'){
       c.appendChild(mkBtn('Clock In','btn-green','clock_in',true));
-    } else if(status==='working') {
+    }else if(status==='working'){
       c.appendChild(mkBtn('Start Break','btn-orange','break_start'));
-      c.appendChild(mkBtn('Lunch',      'btn-purple','lunch_start'));
-      c.appendChild(mkBtn('Clock Out',  'btn-red',   'clock_out',true));
-    } else if(status==='on_break') {
+      c.appendChild(mkBtn('Lunch','btn-purple','lunch_start'));
+      c.appendChild(mkBtn('Clock Out','btn-red','clock_out',true));
+    }else if(status==='on_break'){
       c.appendChild(mkBtn('End Break','btn-green','break_end',true));
-    } else if(status==='on_lunch') {
+    }else if(status==='on_lunch'){
       c.appendChild(mkBtn('End Lunch','btn-purple','lunch_end',true));
     }
   }
-
-  function renderLog(events) {
-    const card=document.getElementById('logCard');
-    const list=document.getElementById('logList');
+  function renderLog(events){
+    const card=document.getElementById('logCard'),list=document.getElementById('logList');
     if(!events||!events.length){card.style.display='none';return;}
     card.style.display='block';
+    // Show time in Belize local (stored as BZE, display as-is)
     list.innerHTML=[...events].reverse().map(e=>'<div class="log-item"><span class="log-dot ld-'+e.event_type+'"></span><div><div class="log-type lt-'+e.event_type+'">'+(LOG_LABELS[e.event_type]||e.event_type)+'</div><div class="log-time">'+e.timestamp.slice(11,19)+'</div></div></div>').join('');
   }
 
-  async function doAction(action) {
+  async function doAction(action){
     const name=document.getElementById('agentName').value.trim();
     setSpinner(true);
     document.querySelectorAll('#actionButtons button').forEach(b=>b.disabled=true);
-    try {
+    try{
       const ok=await sbPost({agent_name:name,event_type:action,timestamp:nowStr(),event_date:todayStr()});
       if(!ok){showMsg('Failed to save. Try again.');return;}
       await loadStatus();
-    } catch(e){showMsg('Connection error.');}
+    }catch(e){showMsg('Connection error.');}
     finally{setSpinner(false);}
   }
 
-  function tickClock() {
-    const now=new Date();
+  function tickClock(){
+    const bz=bzNow();
     document.getElementById('liveClock').textContent=
-      now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})
-      +'  ·  '+now.toLocaleTimeString('en-US',{hour12:false});
+      bz.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'UTC'})
+      +'  ·  '+bz.toISOString().slice(11,19);
   }
-  tickClock(); setInterval(tickClock,1000);
+  tickClock();setInterval(tickClock,1000);
 </script>
 </body>
 </html>
