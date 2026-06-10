@@ -15,15 +15,20 @@
   .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:400px;}
   .card-log{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;width:100%;max-width:340px;}
   label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;}
-  input[type="email"],input[type="text"]{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;color:var(--text);font-family:'Inter',sans-serif;font-size:1rem;outline:none;transition:border-color .2s;}
-  input[type="email"]:focus,input[type="text"]:focus{border-color:var(--blue);}
-  input[type="email"].error{border-color:var(--red);}
-  .input-group{margin-bottom:1.25rem;}
-  .email-hint{font-size:.72rem;color:var(--muted);margin-top:.35rem;}
-  .status-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1.5rem;display:none;}
-  .status-box.visible{display:block;}
-  .greeting{font-size:1.1rem;font-weight:600;margin-bottom:.25rem;}
-  .greeting-email{font-size:.75rem;color:var(--muted);margin-bottom:.75rem;}
+  input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;color:var(--text);font-family:'Inter',sans-serif;font-size:1rem;outline:none;transition:border-color .2s;margin-bottom:.1rem;}
+  input:focus{border-color:var(--blue);}
+  .input-group{margin-bottom:1.1rem;}
+  /* Auth screens */
+  .auth-box{display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:400px;}
+  .auth-box.active{display:block;}
+  .auth-title{font-size:1rem;font-weight:700;margin-bottom:.3rem;}
+  .auth-sub{font-size:.8rem;color:var(--muted);margin-bottom:1.25rem;}
+  .tab-row{display:flex;gap:.5rem;margin-bottom:1.5rem;}
+  .tab{flex:1;padding:.6rem;border:1px solid var(--border);border-radius:7px;background:transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s;}
+  .tab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+  /* Status */
+  .status-box{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1.5rem;}
+  .greeting{font-size:1.1rem;font-weight:600;margin-bottom:.75rem;}
   .status-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.4rem;}
   .status-pill{display:inline-block;padding:.25rem .9rem;border-radius:999px;font-size:.8rem;font-weight:600;margin-bottom:1rem;}
   .pill-working{background:rgba(76,175,125,.15);color:var(--green);border:1px solid var(--green);}
@@ -36,18 +41,19 @@
   .timer-block .tv{font-family:'JetBrains Mono',monospace;font-size:1.15rem;font-weight:700;}
   .tv-work{color:var(--green);}.tv-break{color:var(--orange);}.tv-lunch{color:var(--purple);}
   .actions{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem;}
-  button{width:100%;padding:.8rem 1rem;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s;}
-  button:hover:not(:disabled){opacity:.88;transform:translateY(-1px);}
-  button:disabled{opacity:.35;cursor:not-allowed;transform:none;}
-  .btn-load{background:var(--navy);color:var(--text);grid-column:span 2;border:1px solid var(--border);}
+  button.action-btn{width:100%;padding:.8rem 1rem;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s;}
+  button.action-btn:hover:not(:disabled){opacity:.88;transform:translateY(-1px);}
+  button.action-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+  .btn-primary{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.8rem;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:.5rem;}
+  .btn-primary:hover{opacity:.88;}
   .btn-green{background:var(--green);color:#fff;}.btn-red{background:var(--red);color:#fff;}
   .btn-orange{background:var(--orange);color:#fff;}.btn-purple{background:var(--purple);color:#fff;}
   .btn-full{grid-column:span 2;}
-  .btn-logout{width:auto;padding:.4rem .9rem;font-size:.75rem;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:6px;margin-bottom:1rem;cursor:pointer;}
+  .btn-logout{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:7px;padding:.4rem .9rem;font-family:'Inter',sans-serif;font-size:.78rem;cursor:pointer;margin-top:1rem;}
   .btn-logout:hover{border-color:var(--red);color:var(--red);}
   .divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0;}
   .clock-live{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--muted);text-align:center;margin-top:1.5rem;}
-  #msg{font-size:.82rem;margin-top:.5rem;min-height:1.2em;}
+  #msg,#authMsg{font-size:.82rem;margin-top:.5rem;min-height:1.2em;}
   .spinner{display:none;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .6s linear infinite;margin:.5rem auto 0;}
   .spinner.show{display:block;}
   @keyframes spin{to{transform:rotate(360deg);}}
@@ -63,320 +69,346 @@
   .lt-clock_in{color:var(--green);}.lt-clock_out{color:var(--red);}
   .lt-break_start,.lt-break_end{color:var(--orange);}
   .lt-lunch_start,.lt-lunch_end{color:var(--purple);}
-  .nav-links{margin-top:2rem;display:flex;gap:1rem;font-size:.78rem;color:var(--muted);}
-  .nav-links a{color:var(--blue);text-decoration:none;}
-
-  /* Login screen */
-  #loginSection{width:100%;max-width:400px;}
-  .login-title{font-size:1rem;font-weight:600;margin-bottom:1.5rem;}
-  .lock-icon{font-size:2rem;margin-bottom:1rem;display:block;text-align:center;}
 </style>
 </head>
 <body>
 <div class="brand">GoAnswer · Time Clock</div>
 <h1>Agent Portal</h1>
 
-<!-- LOGIN SECTION -->
-<div id="loginSection">
-  <div class="card">
-    <span class="lock-icon">🔒</span>
-    <div class="login-title" style="text-align:center">Sign in with your GoAnswer email</div>
+<!-- Auth Screen -->
+<div class="auth-box active" id="authScreen">
+  <div class="tab-row">
+    <button class="tab active" onclick="showTab('login')">Sign In</button>
+    <button class="tab" onclick="showTab('register')">Register</button>
+  </div>
+
+  <!-- Login -->
+  <div id="loginForm">
+    <div class="auth-title">Welcome back</div>
+    <div class="auth-sub">Sign in with your GoAnswer email</div>
     <div class="input-group">
-      <label for="emailInput">Work Email</label>
-      <input type="email" id="emailInput" placeholder="yourname@goanswer.io" autocomplete="email" autocapitalize="off">
-      <div class="email-hint">Must be a @goanswer.io address</div>
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="you@goanswer.io">
     </div>
-    <div class="actions">
-      <button class="btn-load" onclick="doLogin()">Sign In</button>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <div id="loginMsg" style="font-size:.82rem;margin-top:.75rem;min-height:1.2em;color:var(--red);text-align:center;"></div>
+    <button class="btn-primary" onclick="doLogin()">Sign In</button>
   </div>
+
+  <!-- Register -->
+  <div id="registerForm" style="display:none">
+    <div class="auth-title">Create your account</div>
+    <div class="auth-sub">Use your @goanswer.io email to register</div>
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" id="regEmail" placeholder="you@goanswer.io">
+    </div>
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" id="regPassword" placeholder="Choose a password">
+    </div>
+    <div class="input-group">
+      <label>Confirm Password</label>
+      <input type="password" id="regConfirm" placeholder="Repeat password" onkeydown="if(event.key==='Enter')doRegister()">
+    </div>
+    <button class="btn-primary" onclick="doRegister()">Create Account</button>
+  </div>
+
+  <div class="spinner" id="authSpinner"></div>
+  <div id="authMsg"></div>
 </div>
 
-<!-- MAIN PORTAL (hidden until login) -->
-<div id="portalSection" style="display:none;width:100%;display:none;flex-direction:column;align-items:center;">
-  <div class="layout">
-    <div class="card">
-      <button class="btn-logout" onclick="doLogout()">⇠ Sign Out</button>
-      <div class="spinner" id="spinner"></div>
-      <div id="msg"></div>
-      <div class="status-box" id="statusBox">
-        <div class="greeting" id="greeting"></div>
-        <div class="greeting-email" id="greetingEmail"></div>
-        <div class="status-label">Current Status</div>
-        <span class="status-pill" id="statusPill">—</span>
-        <div class="timers">
-          <div class="timer-block"><div class="tl">Work Time</div><div class="tv tv-work" id="workTimer">00:00:00</div></div>
-          <div class="timer-block"><div class="tl">Break</div><div class="tv tv-break" id="breakTimer">00:00:00</div></div>
-          <div class="timer-block"><div class="tl">Lunch</div><div class="tv tv-lunch" id="lunchTimer">00:00:00</div></div>
-        </div>
-        <hr class="divider">
-        <div class="actions" id="actionButtons"></div>
+<!-- Main Clock Screen -->
+<div class="layout" id="mainScreen" style="display:none">
+  <div class="card">
+    <div class="status-box" id="statusBox">
+      <div class="greeting" id="greeting"></div>
+      <div class="status-label">Current Status</div>
+      <span class="status-pill" id="statusPill">—</span>
+      <div class="timers">
+        <div class="timer-block"><div class="tl">Work Time</div><div class="tv tv-work" id="workTimer">00:00:00</div></div>
+        <div class="timer-block"><div class="tl">Break</div><div class="tv tv-break" id="breakTimer">00:00:00</div></div>
+        <div class="timer-block"><div class="tl">Lunch</div><div class="tv tv-lunch" id="lunchTimer">00:00:00</div></div>
       </div>
-      <div class="clock-live" id="liveClock"></div>
+      <hr class="divider">
+      <div class="actions" id="actionButtons"></div>
     </div>
-    <div class="card-log" id="logCard" style="display:none">
-      <div class="log-title">Today's Activity Log</div>
-      <div id="logList"><div class="log-empty">No events yet.</div></div>
+    <div class="spinner" id="spinner"></div>
+    <div id="msg"></div>
+    <div class="clock-live" id="liveClock"></div>
+    <div style="text-align:center">
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
     </div>
   </div>
-</div>
-
-<div class="nav-links">
-  <span>Supervisor: <a href="supervisor.html">supervisor.html</a></span>
-  <span>Developer: <a href="developer.html">developer.html</a></span>
+  <div class="card-log" id="logCard" style="display:none">
+    <div class="log-title">Today's Activity Log</div>
+    <div id="logList"><div class="log-empty">No events yet.</div></div>
+  </div>
 </div>
 
 <script>
   const SUPABASE_URL      = "https://fmnvpaynzcshcfyojvul.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtbnZwYXluemNzaGNmeW9qdnVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDc5NjgsImV4cCI6MjA5NjY4Mzk2OH0.Ib9fgnWF9wOB2napqTUygrdIP0pIjNy9TVJMZrRDz64";
-  const SB_HEADERS = {'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
+  const SB = {'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
 
-  let state=null, workSec=0, breakSec=0, lunchSec=0, ticker=null;
-  let currentEmail='', currentName='', sessionDate='';
+  // ── Time helpers (store UTC, display as BZE = UTC-6) ──────────────────────
+  function bzNow()    { return new Date(Date.now() - 6*3600000); }
+  function todayBZ()  { return bzNow().toISOString().slice(0,10); }
+  function nowUTC()   { return new Date().toISOString().replace('T',' ').slice(0,19); }
 
-  // ─── Date / time helpers ────────────────────────────────────────────────────
-  function todayStr(){ return new Date().toISOString().slice(0,10); }
-  function nowStr()  { return new Date().toISOString().replace('T',' ').slice(0,19); }
-  function fmtHMS(s) { return [Math.floor(s/3600),Math.floor((s%3600)/60),Math.floor(s%60)].map(v=>String(v).padStart(2,'0')).join(':'); }
-
-  // Convert a raw timestamp string "HH:MM:SS" to 12-hr format
-  function to12hr(timeStr){
-    const [h,m,s]=timeStr.split(':').map(Number);
-    const ampm=h<12?'AM':'PM';
-    const h12=h%12||12;
-    return String(h12).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+ampm;
+  function fmt12(utcStr) {
+    // utcStr stored as UTC "YYYY-MM-DD HH:MM:SS" → convert to BZE → 12hr
+    const d = new Date(utcStr.replace(' ','T')+'Z');
+    const bz = new Date(d.getTime() - 6*3600000);
+    let h = bz.getUTCHours(), m = bz.getUTCMinutes(), s = bz.getUTCSeconds();
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+ampm;
   }
 
-  // ─── Email → Display name ────────────────────────────────────────────────────
-  function emailToName(email){
-    // "jonathan.gutierrez@goanswer.io" → "Jonathan Gutierrez"
+  function fmtHMS(s) {
+    s = Math.max(0, Math.floor(s));
+    return [Math.floor(s/3600),Math.floor((s%3600)/60),s%60].map(v=>String(v).padStart(2,'0')).join(':');
+  }
+
+  // ── Auth helpers ──────────────────────────────────────────────────────────
+  function nameFromEmail(email) {
     const local = email.split('@')[0];
-    return local.replace(/[._-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+    return local.split('.').map(p=>p.charAt(0).toUpperCase()+p.slice(1)).join(' ');
   }
 
-  // ─── Session helpers (localStorage) ─────────────────────────────────────────
-  function saveSession(email){
-    localStorage.setItem('ga_agent_email', email);
-    localStorage.setItem('ga_session_date', todayStr());
-  }
-  function clearSession(){
-    localStorage.removeItem('ga_agent_email');
-    localStorage.removeItem('ga_session_date');
-  }
-  function loadSession(){
-    const email=localStorage.getItem('ga_agent_email');
-    const date =localStorage.getItem('ga_session_date');
-    if(!email) return null;
-    // If the stored date is not today, wipe it so the UI resets fresh each day
-    if(date !== todayStr()){
-      clearSession();
-      return null;
-    }
-    return email;
+  function showTab(tab) {
+    document.getElementById('loginForm').style.display    = tab==='login'    ? 'block' : 'none';
+    document.getElementById('registerForm').style.display = tab==='register' ? 'block' : 'none';
+    document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='register'&&i===1)));
+    setAuthMsg('');
   }
 
-  // ─── UI visibility ───────────────────────────────────────────────────────────
-  function showPortal(){
-    document.getElementById('loginSection').style.display='none';
-    const p=document.getElementById('portalSection');
-    p.style.display='flex';
+  function setAuthMsg(txt,err=true) {
+    const el=document.getElementById('authMsg');
+    el.style.color=err?'var(--red)':'var(--green)';el.textContent=txt;
   }
-  function showLogin(){
-    document.getElementById('loginSection').style.display='block';
-    const p=document.getElementById('portalSection');
-    p.style.display='none';
-  }
-
-  // ─── Login / Logout ──────────────────────────────────────────────────────────
-  function doLogin(){
-    const raw=document.getElementById('emailInput').value.trim().toLowerCase();
-    const emailEl=document.getElementById('emailInput');
-    const msgEl=document.getElementById('loginMsg');
-
-    if(!raw){msgEl.textContent='Please enter your email.';emailEl.classList.add('error');return;}
-    if(!raw.endsWith('@goanswer.io')){
-      msgEl.textContent='Only @goanswer.io emails are allowed.';
-      emailEl.classList.add('error');
-      return;
-    }
-    emailEl.classList.remove('error');
-    msgEl.textContent='';
-    currentEmail=raw;
-    currentName=emailToName(raw);
-    saveSession(raw);
-    showPortal();
-    loadStatus();
-  }
-
-  function doLogout(){
-    clearSession();
-    currentEmail='';
-    currentName='';
-    if(ticker){clearInterval(ticker);ticker=null;}
-    document.getElementById('statusBox').classList.remove('visible');
-    document.getElementById('logCard').style.display='none';
-    document.getElementById('emailInput').value='';
-    showLogin();
-  }
-
-  // ─── Status loading ──────────────────────────────────────────────────────────
+  function setAuthSpinner(on){document.getElementById('authSpinner').classList.toggle('show',on);}
   function showMsg(txt,err=true){const el=document.getElementById('msg');el.style.color=err?'var(--red)':'var(--green)';el.textContent=txt;}
   function setSpinner(on){document.getElementById('spinner').classList.toggle('show',on);}
 
-  async function sbGet(params){
-    const res=await fetch(SUPABASE_URL+'/rest/v1/events?'+params,{headers:SB_HEADERS});
+  async function sbGet(table,params=''){
+    const res=await fetch(SUPABASE_URL+'/rest/v1/'+table+'?'+params,{headers:SB});
     return res.json();
   }
-  async function sbPost(body){
-    const res=await fetch(SUPABASE_URL+'/rest/v1/events',{
-      method:'POST',headers:{...SB_HEADERS,'Prefer':'return=minimal'},
-      body:JSON.stringify(body)
+  async function sbPost(table,body,prefer='return=minimal'){
+    const res=await fetch(SUPABASE_URL+'/rest/v1/'+table,{
+      method:'POST',headers:{...SB,'Prefer':prefer},body:JSON.stringify(body)
+    });
+    return prefer==='return=representation' ? res.json() : res.ok;
+  }
+  async function sbPatch(table,filter,body){
+    const res=await fetch(SUPABASE_URL+'/rest/v1/'+table+'?'+filter,{
+      method:'PATCH',headers:{...SB,'Prefer':'return=minimal'},body:JSON.stringify(body)
     });
     return res.ok;
   }
 
-  function computeTotals(events){
+  // ── Registration ──────────────────────────────────────────────────────────
+  async function doRegister() {
+    const email    = document.getElementById('regEmail').value.trim().toLowerCase();
+    const password = document.getElementById('regPassword').value;
+    const confirm  = document.getElementById('regConfirm').value;
+    if (!email.endsWith('@goanswer.io')) { setAuthMsg('Must use a @goanswer.io email.'); return; }
+    if (password.length < 4)             { setAuthMsg('Password must be at least 4 characters.'); return; }
+    if (password !== confirm)            { setAuthMsg('Passwords do not match.'); return; }
+    setAuthSpinner(true); setAuthMsg('');
+    try {
+      const existing = await sbGet('agents','email=eq.'+encodeURIComponent(email));
+      if (existing && existing.length > 0) { setAuthMsg('An account with this email already exists.'); return; }
+      const name = nameFromEmail(email);
+      const created_at = nowUTC();
+      const ok = await sbPost('agents',{email,name,password,created_at});
+      if (!ok) { setAuthMsg('Registration failed. Try again.'); return; }
+      // Auto login
+      saveSession(email, name);
+      showClock(name);
+    } catch(e) { setAuthMsg('Connection error: '+e.message); }
+    finally { setAuthSpinner(false); }
+  }
+
+  // ── Login ─────────────────────────────────────────────────────────────────
+  async function doLogin() {
+    const email    = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+    if (!email.endsWith('@goanswer.io')) { setAuthMsg('Must use a @goanswer.io email.'); return; }
+    if (!password) { setAuthMsg('Enter your password.'); return; }
+    setAuthSpinner(true); setAuthMsg('');
+    try {
+      const rows = await sbGet('agents','email=eq.'+encodeURIComponent(email)+'&password=eq.'+encodeURIComponent(password));
+      if (!rows || rows.length === 0) { setAuthMsg('Incorrect email or password.'); return; }
+      const agent = rows[0];
+      saveSession(agent.email, agent.name);
+      showClock(agent.name);
+    } catch(e) { setAuthMsg('Connection error: '+e.message); }
+    finally { setAuthSpinner(false); }
+  }
+
+  // ── Session ───────────────────────────────────────────────────────────────
+  function saveSession(email, name) {
+    localStorage.setItem('tc_email', email);
+    localStorage.setItem('tc_name',  name);
+    localStorage.setItem('tc_day',   todayBZ());
+  }
+  function clearSession() {
+    localStorage.removeItem('tc_email');
+    localStorage.removeItem('tc_name');
+    localStorage.removeItem('tc_day');
+  }
+  function logout() {
+    clearSession();
+    location.reload();
+  }
+
+  // ── Show clock screen ─────────────────────────────────────────────────────
+  function showClock(name) {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'flex';
+    document.getElementById('greeting').textContent = 'Welcome, '+name;
+    loadStatus(name);
+  }
+
+  // ── Clock logic ───────────────────────────────────────────────────────────
+  let state=null, ticker=null, tickBase={w:0,b:0,l:0}, tickStart=null;
+
+  function computeTotals(events) {
     let ws=0,bs=0,ls=0,status='not_clocked_in',ci=null,bst=null,lst=null;
-    for(const ev of events){
-      const ts=new Date(ev.timestamp);
-      if     (ev.event_type==='clock_in')   {ci=ts;status='working';}
-      else if(ev.event_type==='clock_out')  {if(ci)ws+=(ts-ci)/1000;ci=null;status='clocked_out';}
-      else if(ev.event_type==='break_start'){if(ci)ws+=(ts-ci)/1000;ci=null;bst=ts;status='on_break';}
-      else if(ev.event_type==='break_end')  {if(bst)bs+=(ts-bst)/1000;bst=null;ci=ts;status='working';}
-      else if(ev.event_type==='lunch_start'){if(ci)ws+=(ts-ci)/1000;ci=null;lst=ts;status='on_lunch';}
-      else if(ev.event_type==='lunch_end')  {if(lst)ls+=(ts-lst)/1000;lst=null;ci=ts;status='working';}
+    for (const ev of events) {
+      const ts = new Date(ev.timestamp.replace(' ','T')+'Z'); // stored as UTC
+      if      (ev.event_type==='clock_in')    { ci=ts;  status='working'; }
+      else if (ev.event_type==='clock_out')   { if(ci) ws+=(ts-ci)/1000;  ci=null;  status='clocked_out'; }
+      else if (ev.event_type==='break_start') { if(ci) ws+=(ts-ci)/1000;  ci=null;  bst=ts; status='on_break'; }
+      else if (ev.event_type==='break_end')   { if(bst)bs+=(ts-bst)/1000; bst=null; ci=ts;  status='working'; }
+      else if (ev.event_type==='lunch_start') { if(ci) ws+=(ts-ci)/1000;  ci=null;  lst=ts; status='on_lunch'; }
+      else if (ev.event_type==='lunch_end')   { if(lst)ls+=(ts-lst)/1000; lst=null; ci=ts;  status='working'; }
     }
-    const now=new Date();
-    if(ci&&status==='working')  ws+=(now-ci)/1000;
-    if(bst&&status==='on_break')bs+=(now-bst)/1000;
-    if(lst&&status==='on_lunch')ls+=(now-lst)/1000;
-    return{work_seconds:Math.floor(ws),break_seconds:Math.floor(bs),lunch_seconds:Math.floor(ls),status};
+    const now = new Date();
+    if (ci  && status==='working')  ws += Math.max(0,(now-ci)/1000);
+    if (bst && status==='on_break') bs += Math.max(0,(now-bst)/1000);
+    if (lst && status==='on_lunch') ls += Math.max(0,(now-lst)/1000);
+    return { work_seconds:Math.max(0,Math.floor(ws)), break_seconds:Math.max(0,Math.floor(bs)), lunch_seconds:Math.max(0,Math.floor(ls)), status };
   }
 
-  async function loadStatus(){
-    showMsg('');setSpinner(true);
-    try{
-      const events=await sbGet('agent_name=eq.'+encodeURIComponent(currentName)+'&event_date=eq.'+todayStr()+'&order=id.asc');
-      const totals=computeTotals(events||[]);
-      applyState({name:currentName,email:currentEmail,events:events||[],...totals});
-    }catch(e){showMsg('Connection error: '+e.message);}
-    finally{setSpinner(false);}
+  async function loadStatus(name) {
+    setSpinner(true);
+    try {
+      const events = await sbGet('events','agent_name=eq.'+encodeURIComponent(name)+'&event_date=eq.'+todayBZ()+'&order=id.asc');
+      const totals = computeTotals(events||[]);
+      applyState({name, events:events||[], ...totals});
+    } catch(e) { showMsg('Connection error.'); }
+    finally { setSpinner(false); }
   }
 
-  const STATUS_LABELS={working:'Working',on_break:'On Break',on_lunch:'On Lunch',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
-  const LOG_LABELS={clock_in:'Clocked In',clock_out:'Clocked Out',break_start:'Break Started',break_end:'Break Ended',lunch_start:'Lunch Started',lunch_end:'Lunch Ended'};
+  const STATUS_LABELS = {working:'Working',on_break:'On Break',on_lunch:'On Lunch',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
+  const LOG_LABELS    = {clock_in:'Clocked In',clock_out:'Clocked Out',break_start:'Break Started',break_end:'Break Ended',lunch_start:'Lunch Started',lunch_end:'Lunch Ended'};
 
-  function applyState(data){
-    state=data;workSec=data.work_seconds;breakSec=data.break_seconds;lunchSec=data.lunch_seconds;
-    document.getElementById('statusBox').classList.add('visible');
-    document.getElementById('greeting').textContent='Welcome, '+data.name;
-    document.getElementById('greetingEmail').textContent=data.email;
-    const pill=document.getElementById('statusPill');
-    pill.textContent=STATUS_LABELS[data.status]||data.status;
-    pill.className='status-pill pill-'+data.status;
-    document.getElementById('workTimer').textContent=fmtHMS(workSec);
-    document.getElementById('breakTimer').textContent=fmtHMS(breakSec);
-    document.getElementById('lunchTimer').textContent=fmtHMS(lunchSec);
+  function applyState(data) {
+    state = data;
+    if (ticker) clearInterval(ticker);
+    tickBase  = {w:data.work_seconds, b:data.break_seconds, l:data.lunch_seconds};
+    tickStart = Date.now();
+    const pill = document.getElementById('statusPill');
+    pill.textContent = STATUS_LABELS[data.status]||data.status;
+    pill.className   = 'status-pill pill-'+data.status;
+    updateTimers();
     renderButtons(data.status);
     renderLog(data.events);
-    if(ticker)clearInterval(ticker);
-    if(['working','on_break','on_lunch'].includes(data.status))
-      ticker=setInterval(tickTimers,1000);
+    if (['working','on_break','on_lunch'].includes(data.status))
+      ticker = setInterval(updateTimers, 1000);
   }
 
-  function tickTimers(){
-    if(!state)return;
-    if(state.status==='working')  workSec++;
-    if(state.status==='on_break') breakSec++;
-    if(state.status==='on_lunch') lunchSec++;
-    document.getElementById('workTimer').textContent=fmtHMS(workSec);
-    document.getElementById('breakTimer').textContent=fmtHMS(breakSec);
-    document.getElementById('lunchTimer').textContent=fmtHMS(lunchSec);
+  function updateTimers() {
+    if (!state) return;
+    const el = Math.floor((Date.now()-tickStart)/1000);
+    document.getElementById('workTimer').textContent  = fmtHMS(tickBase.w + (state.status==='working'  ? el : 0));
+    document.getElementById('breakTimer').textContent = fmtHMS(tickBase.b + (state.status==='on_break' ? el : 0));
+    document.getElementById('lunchTimer').textContent = fmtHMS(tickBase.l + (state.status==='on_lunch' ? el : 0));
   }
 
-  function mkBtn(label,cls,action,full=false){
+  function mkBtn(label,cls,action,full=false) {
     const b=document.createElement('button');
-    b.className=cls+(full?' btn-full':'');
-    b.textContent=label;
-    b.onclick=()=>doAction(action);
-    return b;
+    b.className='action-btn '+cls+(full?' btn-full':'');
+    b.textContent=label; b.onclick=()=>doAction(action); return b;
   }
-
-  function renderButtons(status){
-    const c=document.getElementById('actionButtons');c.innerHTML='';
-    if(status==='not_clocked_in'||status==='clocked_out'){
+  function renderButtons(status) {
+    const c=document.getElementById('actionButtons'); c.innerHTML='';
+    if (status==='not_clocked_in'||status==='clocked_out') {
       c.appendChild(mkBtn('Clock In','btn-green','clock_in',true));
-    }else if(status==='working'){
+    } else if (status==='working') {
       c.appendChild(mkBtn('Start Break','btn-orange','break_start'));
       c.appendChild(mkBtn('Lunch',      'btn-purple','lunch_start'));
       c.appendChild(mkBtn('Clock Out',  'btn-red',   'clock_out',true));
-    }else if(status==='on_break'){
+    } else if (status==='on_break') {
       c.appendChild(mkBtn('End Break','btn-green','break_end',true));
-    }else if(status==='on_lunch'){
+    } else if (status==='on_lunch') {
       c.appendChild(mkBtn('End Lunch','btn-purple','lunch_end',true));
     }
   }
 
-  function renderLog(events){
-    const card=document.getElementById('logCard');
-    const list=document.getElementById('logList');
-    if(!events||!events.length){card.style.display='none';return;}
+  function renderLog(events) {
+    const card=document.getElementById('logCard'), list=document.getElementById('logList');
+    if (!events||!events.length) { card.style.display='none'; return; }
     card.style.display='block';
-    list.innerHTML=[...events].reverse().map(e=>{
-      const rawTime=e.timestamp.slice(11,19);
-      const display=to12hr(rawTime);
-      return '<div class="log-item"><span class="log-dot ld-'+e.event_type+'"></span><div><div class="log-type lt-'+e.event_type+'">'+(LOG_LABELS[e.event_type]||e.event_type)+'</div><div class="log-time">'+display+'</div></div></div>';
-    }).join('');
+    list.innerHTML=[...events].reverse().map(e=>`
+      <div class="log-item">
+        <span class="log-dot ld-${e.event_type}"></span>
+        <div>
+          <div class="log-type lt-${e.event_type}">${LOG_LABELS[e.event_type]||e.event_type}</div>
+          <div class="log-time">${fmt12(e.timestamp)}</div>
+        </div>
+      </div>`).join('');
   }
 
-  async function doAction(action){
+  async function doAction(action) {
+    const name = localStorage.getItem('tc_name');
     setSpinner(true);
     document.querySelectorAll('#actionButtons button').forEach(b=>b.disabled=true);
-    try{
-      const ok=await sbPost({agent_name:currentName,event_type:action,timestamp:nowStr(),event_date:todayStr()});
-      if(!ok){showMsg('Failed to save. Try again.');return;}
-      await loadStatus();
-    }catch(e){showMsg('Connection error.');}
-    finally{setSpinner(false);}
+    try {
+      const ok = await sbPost('events',{agent_name:name, event_type:action, timestamp:nowUTC(), event_date:todayBZ()});
+      if (!ok) { showMsg('Failed to save.'); return; }
+      await loadStatus(name);
+    } catch(e) { showMsg('Connection error.'); }
+    finally { setSpinner(false); }
   }
 
-  // ─── Live clock (12-hr) ───────────────────────────────────────────────────────
-  function tickClock(){
-    const now=new Date();
-    document.getElementById('liveClock').textContent=
-      now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})
-      +'  ·  '+now.toLocaleTimeString('en-US',{hour12:true});
+  // ── Live clock ─────────────────────────────────────────────────────────────
+  function tickClock() {
+    const bz = bzNow();
+    let h=bz.getUTCHours(), m=bz.getUTCMinutes(), s=bz.getUTCSeconds();
+    const ampm=h>=12?'PM':'AM'; h=h%12||12;
+    const timeStr=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+ampm;
+    const dateStr=bz.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'UTC'});
+    document.getElementById('liveClock').textContent=dateStr+'  ·  '+timeStr;
   }
-  tickClock();setInterval(tickClock,1000);
+  tickClock(); setInterval(tickClock,1000);
 
-  // ─── Midnight reset ───────────────────────────────────────────────────────────
-  // If the stored session is from a previous day, force logout/reset
-  function scheduleMidnightReset(){
-    const now=new Date();
-    const msUntilMidnight=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1)-now;
-    setTimeout(()=>{
-      // Day rolled over — reset the UI
-      doLogout();
-      document.getElementById('loginMsg').textContent='';
-      scheduleMidnightReset(); // schedule again for next midnight
-    }, msUntilMidnight+500);
-  }
-  scheduleMidnightReset();
-
-  // ─── Boot ────────────────────────────────────────────────────────────────────
-  (function init(){
-    const savedEmail=loadSession();
-    if(savedEmail){
-      currentEmail=savedEmail;
-      currentName=emailToName(savedEmail);
-      document.getElementById('emailInput').value=savedEmail;
-      showPortal();
-      loadStatus();
-    } else {
-      showLogin();
+  // ── Daily reset check ─────────────────────────────────────────────────────
+  setInterval(()=>{
+    const savedDay=localStorage.getItem('tc_day');
+    if (savedDay && savedDay !== todayBZ()) {
+      // New day — reset UI and reload status
+      if (ticker) clearInterval(ticker);
+      state=null;
+      const name=localStorage.getItem('tc_name');
+      localStorage.setItem('tc_day', todayBZ());
+      if (name) loadStatus(name);
     }
-  })();
+  }, 30000); // check every 30s
+
+  // ── Auto-login if session exists ──────────────────────────────────────────
+  const savedEmail = localStorage.getItem('tc_email');
+  const savedName  = localStorage.getItem('tc_name');
+  const savedDay   = localStorage.getItem('tc_day');
+  if (savedEmail && savedName) {
+    showClock(savedName);
+  }
 </script>
 </body>
 </html>
