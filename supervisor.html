@@ -8,15 +8,17 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{--navy:#1F3864;--blue:#2E75B6;--bg:#0f1e35;--card:#162844;--border:#243a5e;--text:#e8edf5;--muted:#8aa0bd;--green:#4caf7d;--orange:#f59e0b;--red:#ef4444;--purple:#a78bfa;--row-alt:#111e33;}
+  /* Lock */
   .lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;}
   .lock-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:360px;text-align:center;}
   .lock-card h2{font-size:1.2rem;font-weight:700;margin-bottom:.5rem;}
   .lock-card p{font-size:.82rem;color:var(--muted);margin-bottom:1.5rem;}
   .lock-card input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;color:var(--text);font-family:'Inter',sans-serif;font-size:1rem;outline:none;margin-bottom:.75rem;text-align:center;letter-spacing:.1em;}
   .lock-card input:focus{border-color:var(--blue);}
-  .lock-card button{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.8rem;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;}
-  .lock-card button:hover{opacity:.88;}
+  .lock-card .lock-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.8rem;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;}
+  .lock-card .lock-btn:hover{opacity:.88;}
   .lock-err{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.2em;}
+  /* Layout */
   body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem;}
   #mainContent{display:none;}
   header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;}
@@ -24,23 +26,38 @@
   h1{font-size:1.5rem;font-weight:700;}
   .live-clock{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;color:var(--blue);text-align:right;}
   .live-date{font-size:.75rem;color:var(--muted);text-align:right;margin-top:.2rem;}
+  /* Tabs */
+  .tabs{display:flex;gap:.75rem;margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:.1rem;}
+  .tab-btn{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;padding:.5rem 1rem .75rem;cursor:pointer;transition:color .15s;margin-bottom:-1px;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tab-btn:hover{color:var(--text);}
+  .tab-pane{display:none;}.tab-pane.active{display:block;}
+  .tab-locked{opacity:.4;cursor:not-allowed !important;}
+  /* Controls */
   .controls{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;}
   .controls label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
-  input[type="date"],input[type="text"]{background:var(--card);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:.5rem .9rem;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;}
-  input[type="text"]{width:180px;}input[type="text"]::placeholder{color:var(--muted);}
+  input[type="date"],input[type="text"],input[type="password"]{background:var(--card);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:.5rem .9rem;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;}
+  input[type="text"]{width:180px;}input[type="text"]::placeholder,input[type="password"]::placeholder{color:var(--muted);}
   input:focus{border-color:var(--blue);}
-  .btn{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:.5rem .9rem;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .15s;}
-  .btn:hover{opacity:.85;}.btn-green{background:var(--green);}
+  .btn{padding:.5rem .9rem;border:none;border-radius:7px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .15s;}
+  .btn:hover{opacity:.85;}
+  .btn-blue{background:var(--blue);color:#fff;}.btn-green{background:var(--green);color:#fff;}
+  .btn-red{background:var(--red);color:#fff;}.btn-orange{background:var(--orange);color:#fff;}
+  .btn-muted{background:var(--border);color:var(--text);}.btn-purple{background:var(--purple);color:#fff;}
+  .btn-sm{padding:.3rem .6rem;font-size:.75rem;}
+  /* Stats */
   .stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:1.5rem;}
   .stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;}
   .stat-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem;}
   .stat-val{font-size:1.5rem;font-weight:700;}
   .green{color:var(--green)}.orange{color:var(--orange)}.red{color:var(--red)}.purple{color:var(--purple)}.smono{font-family:'JetBrains Mono',monospace;font-size:1.1rem;}
-  .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  /* Table */
+  .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;}
   table{width:100%;border-collapse:collapse;font-size:.875rem;}
   thead th{background:var(--navy);padding:.85rem 1rem;text-align:left;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);cursor:pointer;user-select:none;white-space:nowrap;}
   thead th:hover{color:var(--text);}
   thead th.sort-asc::after{content:' ↑';color:var(--blue);}thead th.sort-desc::after{content:' ↓';color:var(--blue);}
+  thead th.no-sort{cursor:default;}thead th.no-sort:hover{color:var(--muted);}
   tbody tr{border-bottom:1px solid var(--border);}tbody tr:last-child{border-bottom:none;}
   tbody tr:hover{background:rgba(46,117,182,.07);}tbody tr:nth-child(even){background:var(--row-alt);}
   tbody tr:nth-child(even):hover{background:rgba(46,117,182,.07);}
@@ -53,20 +70,47 @@
   .dot-clocked_out{background:var(--red);}.dot-not_clocked_in{background:var(--muted);}
   .status-text{font-size:.8rem;font-weight:500;display:flex;align-items:center;}
   .status-text.working{color:var(--green)}.status-text.on_break{color:var(--orange)}.status-text.on_lunch{color:var(--purple)}.status-text.clocked_out{color:var(--red)}.status-text.not_clocked_in{color:var(--muted);}
-  .tmono{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:500;}
+  .tmono{font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:500;}
   .empty-state{text-align:center;padding:3rem;color:var(--muted);font-size:.9rem;}
   .pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;margin-right:.4rem;}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
   .refresh-badge{font-size:.7rem;color:var(--muted);margin-left:auto;}
+  /* Card */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;}
+  .card h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .controls-row{display:flex;gap:.75rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted);}
+  .etype{display:inline-block;padding:.15rem .55rem;border-radius:4px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+  .etype-clock_in{background:rgba(76,175,125,.15);color:var(--green);}
+  .etype-clock_out{background:rgba(239,68,68,.15);color:var(--red);}
+  .etype-break_start,.etype-break_end{background:rgba(245,158,11,.15);color:var(--orange);}
+  .etype-lunch_start,.etype-lunch_end{background:rgba(167,139,250,.15);color:var(--purple);}
+  .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--green);color:var(--green);padding:.7rem 1.2rem;border-radius:8px;font-size:.85rem;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
+  .toast.show{opacity:1;}
+  .danger-zone{border-color:rgba(239,68,68,.3);}.danger-zone h2{color:rgba(239,68,68,.7);}
+  .pw-row{display:flex;gap:.5rem;align-items:center;}
+  .pw-row input{flex:1;padding:.35rem .6rem;font-size:.8rem;}
+  .badge-email{font-size:.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+  /* Mini lock for Agent Accounts tab */
+  .mini-lock{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;text-align:center;max-width:340px;margin:2rem auto;}
+  .mini-lock h3{font-size:1rem;font-weight:700;margin-bottom:.4rem;}
+  .mini-lock p{font-size:.8rem;color:var(--muted);margin-bottom:1rem;}
+  .mini-lock input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;color:var(--text);font-family:'Inter',sans-serif;font-size:.95rem;outline:none;margin-bottom:.75rem;text-align:center;letter-spacing:.1em;}
+  .mini-lock input:focus{border-color:var(--blue);}
+  .mini-lock .lock-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.75rem;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;}
+  .mini-lock .lock-btn:hover{opacity:.88;}
+  .mini-lock-err{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.2em;}
 </style>
 </head>
 <body>
+
+<!-- Main lock -->
 <div class="lock" id="lockScreen">
   <div class="lock-card">
     <h2>Supervisor Dashboard</h2>
     <p>Enter your password to continue</p>
     <input type="password" id="lockInput" placeholder="Password" onkeydown="if(event.key==='Enter')unlock()">
-    <button onclick="unlock()">Enter</button>
+    <button class="lock-btn" onclick="unlock()">Enter</button>
     <div class="lock-err" id="lockErr"></div>
   </div>
 </div>
@@ -76,64 +120,164 @@
   <div><div class="brand">GoAnswer · Time Clock</div><h1>Supervisor Dashboard</h1></div>
   <div><div class="live-clock" id="liveClock">--:--:--</div><div class="live-date" id="liveDate"></div></div>
 </header>
-<div class="controls">
-  <label>Date</label>
-  <input type="date" id="dateFilter">
-  <button class="btn" onclick="goToday()">Today</button>
-  <input type="text" id="searchFilter" placeholder="Filter by agent…">
-  <button class="btn btn-green" onclick="exportCSV()">⬇ Export CSV</button>
-  <span class="refresh-badge"><span class="pulse"></span>Live · updates every 5s</span>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('dashboard',event)">Dashboard</button>
+  <button class="tab-btn" onclick="switchTab('events',event)">Events Log</button>
+  <button class="tab-btn" onclick="switchTab('accounts',event)">Agent Accounts</button>
+  <button class="tab-btn" onclick="switchTab('danger',event)">Danger Zone</button>
 </div>
-<div class="stats-bar">
-  <div class="stat-card"><div class="stat-label">Total Agents</div><div class="stat-val" id="statTotal">—</div></div>
-  <div class="stat-card"><div class="stat-label">Working</div><div class="stat-val green" id="statWorking">—</div></div>
-  <div class="stat-card"><div class="stat-label">On Break</div><div class="stat-val orange" id="statBreak">—</div></div>
-  <div class="stat-card"><div class="stat-label">On Lunch</div><div class="stat-val purple" id="statLunch">—</div></div>
-  <div class="stat-card"><div class="stat-label">Clocked Out</div><div class="stat-val red" id="statOut">—</div></div>
-  <div class="stat-card"><div class="stat-label">Avg Work Time</div><div class="stat-val smono" id="statAvg">—</div></div>
+
+<!-- Tab: Dashboard -->
+<div class="tab-pane active" id="tab-dashboard">
+  <div class="controls">
+    <label>Date</label>
+    <input type="date" id="dateFilter">
+    <button class="btn btn-blue" onclick="goToday()">Today</button>
+    <input type="text" id="searchFilter" placeholder="Filter by agent…">
+    <button class="btn btn-green" onclick="exportCSV()">⬇ Export CSV</button>
+    <span class="refresh-badge"><span class="pulse"></span>Live · updates every 5s</span>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-label">Total Agents</div><div class="stat-val" id="statTotal">—</div></div>
+    <div class="stat-card"><div class="stat-label">Active (Clocked In)</div><div class="stat-val green" id="statActive">—</div></div>
+    <div class="stat-card"><div class="stat-label">On Break / Lunch</div><div class="stat-val orange" id="statAway">—</div></div>
+    <div class="stat-card"><div class="stat-label">Clocked Out</div><div class="stat-val red" id="statOut">—</div></div>
+    <div class="stat-card"><div class="stat-label">Avg Work Time</div><div class="stat-val smono" id="statAvg">—</div></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th onclick="sortBy('name')">Agent</th>
+        <th onclick="sortBy('status')">Status</th>
+        <th class="no-sort">Clock In</th>
+        <th class="no-sort">Clock Out</th>
+        <th onclick="sortBy('work_seconds')">Work Time</th>
+        <th onclick="sortBy('break_seconds')">Break Time</th>
+        <th onclick="sortBy('lunch_seconds')">Lunch Time</th>
+        <th onclick="sortBy('total_seconds')">Total Clocked In</th>
+      </tr></thead>
+      <tbody id="tableBody"><tr><td colspan="8" class="empty-state">Loading…</td></tr></tbody>
+    </table>
+  </div>
 </div>
-<div class="table-wrap">
-  <table>
-    <thead><tr>
-      <th onclick="sortBy('name')">Agent</th>
-      <th onclick="sortBy('status')">Status</th>
-      <th onclick="sortBy('work_seconds')">Work Time</th>
-      <th onclick="sortBy('break_seconds')">Break Time</th>
-      <th onclick="sortBy('lunch_seconds')">Lunch Time</th>
-      <th onclick="sortBy('total_seconds')">Total Clocked In</th>
-    </tr></thead>
-    <tbody id="tableBody"><tr><td colspan="6" class="empty-state">Loading…</td></tr></tbody>
-  </table>
+
+<!-- Tab: Events Log -->
+<div class="tab-pane" id="tab-events">
+  <div class="card">
+    <h2>Events Log
+      <div style="display:flex;gap:.5rem">
+        <button class="btn btn-muted btn-sm" onclick="toggleSort()">⇅ <span id="sortLabel">Newest First</span></button>
+        <button class="btn btn-muted btn-sm" onclick="loadEvents()">Refresh</button>
+      </div>
+    </h2>
+    <div class="controls-row">
+      <input type="text" id="eventAgentFilter" placeholder="Filter by agent name…" oninput="renderEvents()" style="width:220px">
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>ID</th><th>Agent</th><th>Event</th><th>Time (BZE)</th><th>Date</th><th></th></tr></thead>
+        <tbody id="eventsBody"><tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--muted)">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Tab: Agent Accounts (requires extra password) -->
+<div class="tab-pane" id="tab-accounts">
+  <div class="mini-lock" id="accountsLock">
+    <h3>🔒 Restricted Access</h3>
+    <p>Enter the admin password to view agent accounts</p>
+    <input type="password" id="adminPwInput" placeholder="Admin password" onkeydown="if(event.key==='Enter')unlockAccounts()">
+    <button class="lock-btn" onclick="unlockAccounts()">Enter</button>
+    <div class="mini-lock-err" id="adminPwErr"></div>
+  </div>
+  <div id="accountsContent" style="display:none">
+    <div class="card">
+      <h2>Registered Agents <button class="btn btn-muted btn-sm" onclick="loadAgents()">Refresh</button></h2>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Password</th><th>Registered</th><th>Actions</th></tr></thead>
+          <tbody id="agentsBody"><tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--muted)">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab: Danger Zone -->
+<div class="tab-pane" id="tab-danger">
+  <div class="card danger-zone">
+    <h2>⚠ Danger Zone</h2>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;">These actions cannot be undone.</p>
+    <button class="btn btn-orange" onclick="clearToday()">Clear Today's Events</button>
+  </div>
 </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
   const SUPABASE_URL      = "https://fmnvpaynzcshcfyojvul.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtbnZwYXluemNzaGNmeW9qdnVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDc5NjgsImV4cCI6MjA5NjY4Mzk2OH0.Ib9fgnWF9wOB2napqTUygrdIP0pIjNy9TVJMZrRDz64";
-  const SB={'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
-  const PASSWORD="LawftyAD";
+  const SB = {'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
+  const SB_GET = {'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
+  const PW_SUPERVISOR = "LawftyAD";
+  const PW_ADMIN      = "JGut@1432";
 
+  // ── Lock ──────────────────────────────────────────────────────────────────
   function unlock(){
-    if(document.getElementById('lockInput').value===PASSWORD){
+    if(document.getElementById('lockInput').value===PW_SUPERVISOR){
       document.getElementById('lockScreen').style.display='none';
       document.getElementById('mainContent').style.display='block';
-      fetchData();
+      fetchData(); loadEvents();
     }else{document.getElementById('lockErr').textContent='Incorrect password.';document.getElementById('lockInput').value='';}
   }
 
+  function unlockAccounts(){
+    if(document.getElementById('adminPwInput').value===PW_ADMIN){
+      document.getElementById('accountsLock').style.display='none';
+      document.getElementById('accountsContent').style.display='block';
+      loadAgents();
+    }else{document.getElementById('adminPwErr').textContent='Incorrect admin password.';document.getElementById('adminPwInput').value='';}
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
   function bzNow(){return new Date(Date.now()-6*3600000);}
   function todayBZ(){return bzNow().toISOString().slice(0,10);}
   function fmtHMS(s){s=Math.max(0,Math.floor(s));return[Math.floor(s/3600),Math.floor((s%3600)/60),s%60].map(v=>String(v).padStart(2,'0')).join(':');}
+  function fmt12(utcStr){
+    if(!utcStr)return'—';
+    const d=new Date(utcStr.replace(' ','T')+'Z');
+    const bz=new Date(d.getTime()-6*3600000);
+    let h=bz.getUTCHours(),m=bz.getUTCMinutes(),s=bz.getUTCSeconds();
+    const ap=h>=12?'PM':'AM';h=h%12||12;
+    return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+ap;
+  }
+  function toast(msg,color='var(--green)'){
+    const el=document.getElementById('toast');
+    el.textContent=msg;el.style.borderColor=color;el.style.color=color;
+    el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);
+  }
+  function switchTab(name,e){
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('tab-'+name).classList.add('active');
+    if(e&&e.target)e.target.classList.add('active');
+  }
 
+  // ── Clock ─────────────────────────────────────────────────────────────────
   function tickClock(){
     const bz=bzNow();
     let h=bz.getUTCHours(),m=bz.getUTCMinutes(),s=bz.getUTCSeconds();
-    const ampm=h>=12?'PM':'AM';h=h%12||12;
-    document.getElementById('liveClock').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+ampm;
+    const ap=h>=12?'PM':'AM';h=h%12||12;
+    document.getElementById('liveClock').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+ap;
     document.getElementById('liveDate').textContent=bz.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'UTC'});
   }
   tickClock();setInterval(tickClock,1000);
 
+  // ── Dashboard ─────────────────────────────────────────────────────────────
   const todayISO=todayBZ();
   let allAgents=[],sortCol='status',sortDir=1,isToday=true,liveHandle=null,tickAnchors={};
 
@@ -144,10 +288,14 @@
 
   function computeTotals(events){
     let ws=0,bs=0,ls=0,status='not_clocked_in',ci=null,bst=null,lst=null;
+    let firstClockIn=null,lastClockOut=null;
     for(const ev of events){
       const ts=new Date(ev.timestamp.replace(' ','T')+'Z');
-      if(ev.event_type==='clock_in'){ci=ts;status='working';}
-      else if(ev.event_type==='clock_out'){if(ci)ws+=(ts-ci)/1000;ci=null;status='clocked_out';}
+      if(ev.event_type==='clock_in'){
+        if(!firstClockIn)firstClockIn=ev.timestamp;
+        ci=ts;status='working';
+      }
+      else if(ev.event_type==='clock_out'){if(ci)ws+=(ts-ci)/1000;ci=null;status='clocked_out';lastClockOut=ev.timestamp;}
       else if(ev.event_type==='break_start'){if(ci)ws+=(ts-ci)/1000;ci=null;bst=ts;status='on_break';}
       else if(ev.event_type==='break_end'){if(bst)bs+=(ts-bst)/1000;bst=null;ci=ts;status='working';}
       else if(ev.event_type==='lunch_start'){if(ci)ws+=(ts-ci)/1000;ci=null;lst=ts;status='on_lunch';}
@@ -158,13 +306,19 @@
     if(bst&&status==='on_break')bs+=Math.max(0,(now-bst)/1000);
     if(lst&&status==='on_lunch')ls+=Math.max(0,(now-lst)/1000);
     const total=ws+bs+ls;
-    return{work_seconds:Math.max(0,Math.floor(ws)),break_seconds:Math.max(0,Math.floor(bs)),lunch_seconds:Math.max(0,Math.floor(ls)),total_seconds:Math.max(0,Math.floor(total)),status};
+    return{
+      work_seconds:Math.max(0,Math.floor(ws)),
+      break_seconds:Math.max(0,Math.floor(bs)),
+      lunch_seconds:Math.max(0,Math.floor(ls)),
+      total_seconds:Math.max(0,Math.floor(total)),
+      status,firstClockIn,lastClockOut
+    };
   }
 
   async function fetchData(){
     const day=document.getElementById('dateFilter').value;
     try{
-      const res=await fetch(SUPABASE_URL+'/rest/v1/events?event_date=eq.'+day+'&order=id.asc',{headers:SB});
+      const res=await fetch(SUPABASE_URL+'/rest/v1/events?event_date=eq.'+day+'&order=id.asc',{headers:SB_GET});
       const events=await res.json();
       const byAgent={};
       for(const ev of events){if(!byAgent[ev.agent_name])byAgent[ev.agent_name]=[];byAgent[ev.agent_name].push(ev);}
@@ -172,11 +326,15 @@
       allAgents=Object.entries(byAgent).map(([name,evs])=>{
         const t=computeTotals(evs);
         tickAnchors[name]={base:{w:t.work_seconds,b:t.break_seconds,l:t.lunch_seconds,tot:t.total_seconds},fetchedAt:now,status:t.status};
-        return{name,...t,work_fmt:fmtHMS(t.work_seconds),break_fmt:fmtHMS(t.break_seconds),lunch_fmt:fmtHMS(t.lunch_seconds),total_fmt:fmtHMS(t.total_seconds)};
+        return{name,...t,
+          work_fmt:fmtHMS(t.work_seconds),break_fmt:fmtHMS(t.break_seconds),
+          lunch_fmt:fmtHMS(t.lunch_seconds),total_fmt:fmtHMS(t.total_seconds),
+          clock_in_fmt:fmt12(t.firstClockIn),clock_out_fmt:t.lastClockOut?fmt12(t.lastClockOut):'—'
+        };
       });
       if(isToday)startLiveTick();else stopLiveTick();
       updateStats();renderTable();
-    }catch(e){document.getElementById('tableBody').innerHTML='<tr><td colspan="6" class="empty-state">Could not connect.</td></tr>';}
+    }catch(e){document.getElementById('tableBody').innerHTML='<tr><td colspan="8" class="empty-state">Could not connect.</td></tr>';}
   }
 
   function startLiveTick(){
@@ -189,7 +347,8 @@
         if(a.status==='working'){a.work_seconds=Math.max(0,anc.base.w+el);a.total_seconds=Math.max(0,anc.base.tot+el);}
         else if(a.status==='on_break'){a.break_seconds=Math.max(0,anc.base.b+el);a.total_seconds=Math.max(0,anc.base.tot+el);}
         else if(a.status==='on_lunch'){a.lunch_seconds=Math.max(0,anc.base.l+el);a.total_seconds=Math.max(0,anc.base.tot+el);}
-        a.work_fmt=fmtHMS(a.work_seconds);a.break_fmt=fmtHMS(a.break_seconds);a.lunch_fmt=fmtHMS(a.lunch_seconds);a.total_fmt=fmtHMS(a.total_seconds);
+        a.work_fmt=fmtHMS(a.work_seconds);a.break_fmt=fmtHMS(a.break_seconds);
+        a.lunch_fmt=fmtHMS(a.lunch_seconds);a.total_fmt=fmtHMS(a.total_seconds);
       });
       renderTimerCells();updateStats();
     },1000);
@@ -207,34 +366,112 @@
 
   const STATUS_ORDER={working:0,on_break:1,on_lunch:2,clocked_out:3,not_clocked_in:4};
   const STATUS_LABELS={working:'Working',on_break:'On Break',on_lunch:'On Lunch',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
+
   function getFiltered(){const q=document.getElementById('searchFilter').value.trim().toLowerCase();return allAgents.filter(a=>!q||a.name.toLowerCase().includes(q));}
   function getSorted(agents){return[...agents].sort((a,b)=>{let va=a[sortCol],vb=b[sortCol];if(sortCol==='status'){va=STATUS_ORDER[va]??9;vb=STATUS_ORDER[vb]??9;}if(typeof va==='string')return sortDir*va.localeCompare(vb);return sortDir*(va-vb);});}
-  function sortBy(col){sortDir=sortCol===col?sortDir*-1:1;sortCol=col;const cols=['name','status','work_seconds','break_seconds','lunch_seconds','total_seconds'];document.querySelectorAll('thead th').forEach((th,i)=>{th.classList.remove('sort-asc','sort-desc');if(cols[i]===col)th.classList.add(sortDir===1?'sort-asc':'sort-desc');});renderTable();}
+  function sortBy(col){
+    sortDir=sortCol===col?sortDir*-1:1;sortCol=col;
+    const cols=['name','status',null,null,'work_seconds','break_seconds','lunch_seconds','total_seconds'];
+    document.querySelectorAll('thead th').forEach((th,i)=>{th.classList.remove('sort-asc','sort-desc');if(cols[i]===col)th.classList.add(sortDir===1?'sort-asc':'sort-desc');});
+    renderTable();
+  }
   function updateStats(){
     const a=getFiltered();
     document.getElementById('statTotal').textContent=a.length;
-    document.getElementById('statWorking').textContent=a.filter(x=>x.status==='working').length;
-    document.getElementById('statBreak').textContent=a.filter(x=>x.status==='on_break').length;
-    document.getElementById('statLunch').textContent=a.filter(x=>x.status==='on_lunch').length;
+    // Active = working + on_break + on_lunch (all clocked in)
+    document.getElementById('statActive').textContent=a.filter(x=>['working','on_break','on_lunch'].includes(x.status)).length;
+    // Away = on break or lunch specifically
+    document.getElementById('statAway').textContent=a.filter(x=>x.status==='on_break'||x.status==='on_lunch').length;
     document.getElementById('statOut').textContent=a.filter(x=>x.status==='clocked_out').length;
     const avg=a.length?a.reduce((s,x)=>s+x.work_seconds,0)/a.length:0;
     document.getElementById('statAvg').textContent=a.length?fmtHMS(Math.floor(avg)):'—';
   }
   function renderTable(){
     const agents=getSorted(getFiltered());const tbody=document.getElementById('tableBody');
-    if(!agents.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state">No agents found.</td></tr>';return;}
-    tbody.innerHTML=agents.map(a=>'<tr data-name="'+a.name+'"><td class="agent-name">'+a.name+'</td><td><span class="status-text '+a.status+'"><span class="status-dot dot-'+a.status+'"></span>'+(STATUS_LABELS[a.status]||a.status)+'</span></td><td><span class="tmono cell-work">'+a.work_fmt+'</span></td><td><span class="tmono cell-break">'+a.break_fmt+'</span></td><td><span class="tmono cell-lunch">'+a.lunch_fmt+'</span></td><td><span class="tmono cell-total">'+a.total_fmt+'</span></td></tr>').join('');
+    if(!agents.length){tbody.innerHTML='<tr><td colspan="8" class="empty-state">No agents found.</td></tr>';return;}
+    tbody.innerHTML=agents.map(a=>`
+      <tr data-name="${a.name}">
+        <td class="agent-name">${a.name}</td>
+        <td><span class="status-text ${a.status}"><span class="status-dot dot-${a.status}"></span>${STATUS_LABELS[a.status]||a.status}</span></td>
+        <td><span class="tmono">${a.clock_in_fmt}</span></td>
+        <td><span class="tmono">${a.clock_out_fmt}</span></td>
+        <td><span class="tmono cell-work">${a.work_fmt}</span></td>
+        <td><span class="tmono cell-break">${a.break_fmt}</span></td>
+        <td><span class="tmono cell-lunch">${a.lunch_fmt}</span></td>
+        <td><span class="tmono cell-total">${a.total_fmt}</span></td>
+      </tr>`).join('');
   }
   function exportCSV(){
     const day=document.getElementById('dateFilter').value;
     const agents=getSorted(getFiltered());
-    const rows=[['Agent','Status','Work Time','Break Time','Lunch Time','Total Clocked In']];
-    agents.forEach(a=>rows.push([a.name,STATUS_LABELS[a.status]||a.status,a.work_fmt,a.break_fmt,a.lunch_fmt,a.total_fmt]));
+    const rows=[['Agent','Status','Clock In','Clock Out','Work Time','Break Time','Lunch Time','Total Clocked In']];
+    agents.forEach(a=>rows.push([a.name,STATUS_LABELS[a.status]||a.status,a.clock_in_fmt,a.clock_out_fmt,a.work_fmt,a.break_fmt,a.lunch_fmt,a.total_fmt]));
     const csv=rows.map(r=>r.map(v=>'"'+v+'"').join(',')).join('\n');
     const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);
     const link=document.createElement('a');link.href=url;link.download='timereport_'+day+'.csv';link.click();URL.revokeObjectURL(url);
   }
   fetchData();setInterval(fetchData,5000);
+
+  // ── Events Log ────────────────────────────────────────────────────────────
+  let allEvents=[],eventsAsc=false;
+  function toggleSort(){eventsAsc=!eventsAsc;document.getElementById('sortLabel').textContent=eventsAsc?'Oldest First':'Newest First';loadEvents();}
+  async function loadEvents(){
+    const res=await fetch(SUPABASE_URL+'/rest/v1/events?order='+(eventsAsc?'id.asc':'id.desc')+'&limit=500',{headers:SB_GET});
+    allEvents=await res.json();renderEvents();
+  }
+  function renderEvents(){
+    const q=document.getElementById('eventAgentFilter').value.trim().toLowerCase();
+    const filtered=allEvents.filter(e=>!q||e.agent_name.toLowerCase().includes(q));
+    const tbody=document.getElementById('eventsBody');
+    if(!filtered.length){tbody.innerHTML='<tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--muted)">No events found.</td></tr>';return;}
+    tbody.innerHTML=filtered.map(e=>`<tr><td class="mono">${e.id}</td><td>${e.agent_name}</td><td><span class="etype etype-${e.event_type}">${e.event_type.replace(/_/g,' ')}</span></td><td class="mono">${fmt12(e.timestamp)}</td><td class="mono">${e.event_date}</td><td><button class="btn btn-red btn-sm" onclick="deleteEvent(${e.id})">✕</button></td></tr>`).join('');
+  }
+  async function deleteEvent(id){
+    if(!confirm('Delete this event?'))return;
+    await fetch(SUPABASE_URL+'/rest/v1/events?id=eq.'+id,{method:'DELETE',headers:SB});
+    toast('Event deleted','var(--orange)');loadEvents();
+  }
+
+  // ── Agent Accounts ────────────────────────────────────────────────────────
+  async function loadAgents(){
+    const res=await fetch(SUPABASE_URL+'/rest/v1/agents?order=name.asc',{headers:SB_GET});
+    const agents=await res.json();
+    const tbody=document.getElementById('agentsBody');
+    if(!agents||!agents.length){tbody.innerHTML='<tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--muted)">No agents registered yet.</td></tr>';return;}
+    tbody.innerHTML=agents.map(a=>`
+      <tr>
+        <td style="font-weight:600">${a.name}</td>
+        <td class="badge-email">${a.email}</td>
+        <td class="mono">${a.password}</td>
+        <td class="mono">${a.created_at?fmt12(a.created_at):'—'}</td>
+        <td>
+          <div class="pw-row">
+            <input type="text" id="pw_${a.id}" placeholder="New password">
+            <button class="btn btn-purple btn-sm" onclick="resetPassword(${a.id})">Save</button>
+            <button class="btn btn-red btn-sm" onclick="deleteAgent(${a.id},'${a.name}')">Delete</button>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+  async function resetPassword(id){
+    const newPw=document.getElementById('pw_'+id).value.trim();
+    if(!newPw){toast('Enter a new password','var(--red)');return;}
+    const res=await fetch(SUPABASE_URL+'/rest/v1/agents?id=eq.'+id,{method:'PATCH',headers:{...SB,'Prefer':'return=minimal'},body:JSON.stringify({password:newPw})});
+    if(res.ok){toast('Password updated');loadAgents();}else toast('Failed','var(--red)');
+  }
+  async function deleteAgent(id,name){
+    if(!confirm('Delete agent "'+name+'" and all their events?'))return;
+    await fetch(SUPABASE_URL+'/rest/v1/events?agent_name=eq.'+encodeURIComponent(name),{method:'DELETE',headers:SB});
+    await fetch(SUPABASE_URL+'/rest/v1/agents?id=eq.'+id,{method:'DELETE',headers:SB});
+    toast('Agent deleted','var(--red)');loadAgents();loadEvents();
+  }
+
+  // ── Danger ────────────────────────────────────────────────────────────────
+  async function clearToday(){
+    if(!confirm('Delete ALL events from today? Cannot be undone.'))return;
+    await fetch(SUPABASE_URL+'/rest/v1/events?event_date=eq.'+todayBZ(),{method:'DELETE',headers:SB});
+    toast("Today's events cleared",'var(--orange)');loadEvents();fetchData();
+  }
 </script>
 </body>
 </html>
