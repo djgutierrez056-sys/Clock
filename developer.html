@@ -8,30 +8,43 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{--navy:#1F3864;--blue:#2E75B6;--bg:#0f1e35;--card:#162844;--border:#243a5e;--text:#e8edf5;--muted:#8aa0bd;--green:#4caf7d;--orange:#f59e0b;--red:#ef4444;--purple:#a78bfa;}
+  .lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;}
+  .lock-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:360px;text-align:center;}
+  .lock-card h2{font-size:1.2rem;font-weight:700;margin-bottom:.5rem;}
+  .lock-card p{font-size:.82rem;color:var(--muted);margin-bottom:1.5rem;}
+  .lock-card input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;color:var(--text);font-family:'Inter',sans-serif;font-size:1rem;outline:none;margin-bottom:.75rem;text-align:center;letter-spacing:.1em;}
+  .lock-card input:focus{border-color:var(--blue);}
+  .lock-card .lock-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.8rem;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;}
+  .lock-card .lock-btn:hover{opacity:.88;}
+  .lock-err{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.2em;}
   body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem;}
+  #mainContent{display:none;}
   header{margin-bottom:2rem;}
   .brand{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
   h1{font-size:1.5rem;font-weight:700;}
   .dev-badge{display:inline-block;background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple);border-radius:5px;font-size:.7rem;font-weight:700;padding:.2rem .6rem;letter-spacing:.1em;margin-left:.6rem;vertical-align:middle;}
+  .tabs{display:flex;gap:.75rem;margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:.1rem;}
+  .tab-btn{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;padding:.5rem 1rem .75rem;cursor:pointer;transition:color .15s;margin-bottom:-1px;}
+  .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
+  .tab-btn:hover{color:var(--text);}
+  .tab-pane{display:none;}.tab-pane.active{display:block;}
   .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;}
-  .card h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);}
-  button{padding:.55rem 1rem;border:none;border-radius:7px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .15s;}
-  button:hover{opacity:.85;}
+  .card h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .controls-row{display:flex;gap:.75rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;}
+  input[type="text"],input[type="password"]{background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:.5rem .9rem;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;}
+  input[type="text"]:focus,input[type="password"]:focus{border-color:var(--blue);}
+  input[type="text"]::placeholder{color:var(--muted);}
+  .btn{padding:.5rem .9rem;border:none;border-radius:7px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .15s;}
+  .btn:hover{opacity:.85;}
   .btn-blue{background:var(--blue);color:#fff;}.btn-red{background:var(--red);color:#fff;}
   .btn-orange{background:var(--orange);color:#fff;}.btn-muted{background:var(--border);color:var(--text);}
-  .btn-sm{padding:.3rem .65rem;font-size:.75rem;}
-  .btn-sort{background:var(--navy);color:var(--text);border:1px solid var(--border);padding:.45rem .85rem;font-size:.78rem;}
-  .btn-sort.asc::after{content:' ↑';color:var(--blue);}
-  .btn-sort.desc::after{content:' ↓';color:var(--blue);}
-  .section-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center;}
-  .filter-input{background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:.45rem .85rem;font-family:'Inter',sans-serif;font-size:.82rem;outline:none;width:200px;}
-  .filter-input:focus{border-color:var(--blue);}
-  .filter-input::placeholder{color:var(--muted);}
+  .btn-green{background:var(--green);color:#fff;}.btn-purple{background:var(--purple);color:#fff;}
+  .btn-sm{padding:.3rem .6rem;font-size:.75rem;}
   table{width:100%;border-collapse:collapse;font-size:.82rem;}
   thead th{background:var(--navy);padding:.75rem 1rem;text-align:left;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
   tbody tr{border-bottom:1px solid var(--border);}tbody tr:last-child{border-bottom:none;}
   tbody tr:hover{background:rgba(46,117,182,.07);}
-  td{padding:.65rem 1rem;}
+  td{padding:.65rem 1rem;vertical-align:middle;}
   .mono{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted);}
   .etype{display:inline-block;padding:.15rem .55rem;border-radius:4px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
   .etype-clock_in{background:rgba(76,175,125,.15);color:var(--green);}
@@ -41,149 +54,199 @@
   .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--green);color:var(--green);padding:.7rem 1.2rem;border-radius:8px;font-size:.85rem;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
   .toast.show{opacity:1;}
   .danger-zone{border-color:rgba(239,68,68,.3);}.danger-zone h2{color:rgba(239,68,68,.7);}
-  .nav-links{margin-top:2rem;font-size:.78rem;color:var(--muted);display:flex;gap:1rem;}
-  .nav-links a{color:var(--blue);text-decoration:none;}
-  .results-count{font-size:.75rem;color:var(--muted);margin-left:auto;}
+  .pw-row{display:flex;gap:.5rem;align-items:center;}
+  .pw-row input{flex:1;}
+  .badge-email{font-size:.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
 </style>
 </head>
 <body>
+
+<div class="lock" id="lockScreen">
+  <div class="lock-card">
+    <h2>Developer Console</h2>
+    <p>Enter your password to continue</p>
+    <input type="password" id="lockInput" placeholder="Password" onkeydown="if(event.key==='Enter')unlock()">
+    <button class="lock-btn" onclick="unlock()">Enter</button>
+    <div class="lock-err" id="lockErr"></div>
+  </div>
+</div>
+
+<div id="mainContent">
 <header>
   <div class="brand">GoAnswer · Time Clock</div>
   <h1>Developer Console <span class="dev-badge">DEV</span></h1>
 </header>
 
-<!-- Danger Zone -->
-<div class="card danger-zone" style="max-width:400px;">
-  <h2>⚠ Danger Zone</h2>
-  <div class="section-actions" style="flex-direction:column;align-items:flex-start;">
-    <button class="btn-orange" onclick="clearToday()" style="width:100%">Clear Today's Events</button>
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('events')">Events Log</button>
+  <button class="tab-btn" onclick="switchTab('agents')">Agent Accounts</button>
+  <button class="tab-btn" onclick="switchTab('danger')">Danger Zone</button>
+</div>
+
+<!-- Tab: Events Log -->
+<div class="tab-pane active" id="tab-events">
+  <div class="card">
+    <h2>
+      Recent Events
+      <div style="display:flex;gap:.5rem">
+        <button class="btn btn-muted btn-sm" onclick="toggleSortOrder()">⇅ Sort: <span id="sortLabel">Newest First</span></button>
+        <button class="btn btn-muted btn-sm" onclick="loadEvents()">Refresh</button>
+      </div>
+    </h2>
+    <div class="controls-row">
+      <input type="text" id="eventAgentFilter" placeholder="Filter by agent name…" oninput="renderEvents()" style="width:220px">
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>ID</th><th>Agent</th><th>Event</th><th>Timestamp (BZE)</th><th>Date</th><th></th></tr></thead>
+        <tbody id="eventsBody"><tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--muted)">Loading…</td></tr></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-<!-- Events Table -->
-<div class="card">
-  <h2>Recent Events (last 500)</h2>
-  <div class="section-actions">
-    <button class="btn-muted" onclick="loadEvents()">⟳ Refresh</button>
-    <button class="btn-sort" id="sortBtn" onclick="toggleSort()">Sort by ID</button>
-    <input type="text" class="filter-input" id="agentFilter" placeholder="Filter by agent name…" oninput="renderTable()">
-    <span class="results-count" id="resultsCount"></span>
-  </div>
-  <div style="overflow-x:auto;">
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Agent</th>
-          <th>Event</th>
-          <th>Time (12hr)</th>
-          <th>Date</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="eventsBody">
-        <tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--muted)">Loading…</td></tr>
-      </tbody>
-    </table>
+<!-- Tab: Agent Accounts -->
+<div class="tab-pane" id="tab-agents">
+  <div class="card">
+    <h2>Registered Agents <button class="btn btn-muted btn-sm" onclick="loadAgents()" style="font-size:.75rem">Refresh</button></h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>Name</th><th>Email</th><th>Password</th><th>Registered</th><th>Reset Password</th></tr></thead>
+        <tbody id="agentsBody"><tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--muted)">Loading…</td></tr></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-<div class="nav-links">
-  <span>Agent: <a href="agent.html">agent.html</a></span>
-  <span>Supervisor: <a href="supervisor.html">supervisor.html</a></span>
+<!-- Tab: Danger Zone -->
+<div class="tab-pane" id="tab-danger">
+  <div class="card danger-zone">
+    <h2>⚠ Danger Zone</h2>
+    <p style="font-size:.82rem;color:var(--muted);margin-bottom:1rem;">These actions cannot be undone.</p>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+      <button class="btn btn-orange" onclick="clearToday()">Clear Today's Events</button>
+    </div>
+  </div>
 </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
   const SUPABASE_URL      = "https://fmnvpaynzcshcfyojvul.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtbnZwYXluemNzaGNmeW9qdnVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDc5NjgsImV4cCI6MjA5NjY4Mzk2OH0.Ib9fgnWF9wOB2napqTUygrdIP0pIjNy9TVJMZrRDz64";
-  const SB_HEADERS = {'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
+  const SB={'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
+  const PASSWORD="LawftyAD";
 
-  let allEvents = [];
-  let sortAsc = false; // default: newest (highest ID) first
-
-  function todayStr(){ return new Date().toISOString().slice(0,10); }
-
-  // Convert "HH:MM:SS" or full ISO-ish timestamp to 12-hr display
-  function fmt12(tsStr){
-    // tsStr looks like "2026-06-10 14:31:58" or just "14:31:58"
-    let timePart = tsStr.length > 8 ? tsStr.slice(11,19) : tsStr;
-    const [h,m,s] = timePart.split(':').map(Number);
-    const ampm = h < 12 ? 'AM' : 'PM';
-    const h12  = h % 12 || 12;
-    return String(h12).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+ampm;
+  function unlock(){
+    if(document.getElementById('lockInput').value===PASSWORD){
+      document.getElementById('lockScreen').style.display='none';
+      document.getElementById('mainContent').style.display='block';
+      loadEvents(); loadAgents();
+    }else{document.getElementById('lockErr').textContent='Incorrect password.';document.getElementById('lockInput').value='';}
   }
 
-  function toast(msg, color='var(--green)'){
+  function bzNow(){return new Date(Date.now()-6*3600000);}
+  function todayStr(){return bzNow().toISOString().slice(0,10);}
+
+  function fmt12(utcStr){
+    const d=new Date(utcStr.replace(' ','T')+'Z');
+    const bz=new Date(d.getTime()-6*3600000);
+    let h=bz.getUTCHours(),m=bz.getUTCMinutes(),s=bz.getUTCSeconds();
+    const ampm=h>=12?'PM':'AM';h=h%12||12;
+    return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+ampm;
+  }
+
+  function toast(msg,color='var(--green)'){
     const el=document.getElementById('toast');
-    el.textContent=msg; el.style.borderColor=color; el.style.color=color;
-    el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2500);
+    el.textContent=msg;el.style.borderColor=color;el.style.color=color;
+    el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);
+  }
+
+  function switchTab(name){
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('tab-'+name).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // ── Events ────────────────────────────────────────────────────────────────
+  let allEvents=[], eventsAsc=false;
+
+  function toggleSortOrder(){
+    eventsAsc=!eventsAsc;
+    document.getElementById('sortLabel').textContent=eventsAsc?'Oldest First':'Newest First';
+    loadEvents();
   }
 
   async function loadEvents(){
-    try{
-      const res = await fetch(SUPABASE_URL+'/rest/v1/events?order=id.desc&limit=500', {headers:SB_HEADERS});
-      allEvents = await res.json();
-    } catch(e){
-      allEvents=[];
-    }
-    renderTable();
+    const order=eventsAsc?'id.asc':'id.desc';
+    const res=await fetch(SUPABASE_URL+'/rest/v1/events?order='+order+'&limit=500',{headers:SB});
+    allEvents=await res.json();
+    renderEvents();
   }
 
-  function toggleSort(){
-    sortAsc = !sortAsc;
-    const btn = document.getElementById('sortBtn');
-    btn.className = 'btn-sort '+(sortAsc ? 'asc' : 'desc');
-    renderTable();
-  }
-
-  function renderTable(){
-    const query = document.getElementById('agentFilter').value.trim().toLowerCase();
-    let filtered = allEvents;
-    if(query) filtered = filtered.filter(e => e.agent_name && e.agent_name.toLowerCase().includes(query));
-
-    // Sort by ID
-    filtered = [...filtered].sort((a,b) => sortAsc ? a.id - b.id : b.id - a.id);
-
-    const tbody = document.getElementById('eventsBody');
-    const count = document.getElementById('resultsCount');
-    count.textContent = filtered.length + ' record' + (filtered.length===1?'':'s');
-
-    if(!filtered.length){
-      tbody.innerHTML='<tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--muted)">'+(query?'No matching agents.':'No events yet.')+'</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = filtered.map(e =>
-      '<tr>'+
-        '<td class="mono">'+e.id+'</td>'+
-        '<td>'+e.agent_name+'</td>'+
-        '<td><span class="etype etype-'+e.event_type+'">'+e.event_type.replace(/_/g,' ')+'</span></td>'+
-        '<td class="mono">'+fmt12(e.timestamp)+'</td>'+
-        '<td class="mono">'+e.event_date+'</td>'+
-        '<td><button class="btn-sm btn-red" onclick="deleteEvent('+e.id+')">✕</button></td>'+
-      '</tr>'
-    ).join('');
+  function renderEvents(){
+    const q=document.getElementById('eventAgentFilter').value.trim().toLowerCase();
+    const filtered=allEvents.filter(e=>!q||e.agent_name.toLowerCase().includes(q));
+    const tbody=document.getElementById('eventsBody');
+    if(!filtered.length){tbody.innerHTML='<tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--muted)">No events found.</td></tr>';return;}
+    tbody.innerHTML=filtered.map(e=>'<tr><td class="mono">'+e.id+'</td><td>'+e.agent_name+'</td><td><span class="etype etype-'+e.event_type+'">'+e.event_type.replace(/_/g,' ')+'</span></td><td class="mono">'+fmt12(e.timestamp)+'</td><td class="mono">'+e.event_date+'</td><td><button class="btn btn-red btn-sm" onclick="deleteEvent('+e.id+')">✕</button></td></tr>').join('');
   }
 
   async function deleteEvent(id){
     if(!confirm('Delete this event?'))return;
-    await fetch(SUPABASE_URL+'/rest/v1/events?id=eq.'+id, {method:'DELETE', headers:SB_HEADERS});
-    toast('Event deleted','var(--orange)');
-    loadEvents();
+    await fetch(SUPABASE_URL+'/rest/v1/events?id=eq.'+id,{method:'DELETE',headers:SB});
+    toast('Event deleted','var(--orange)');loadEvents();
   }
 
+  // ── Agents / Passwords ────────────────────────────────────────────────────
+  async function loadAgents(){
+    const res=await fetch(SUPABASE_URL+'/rest/v1/agents?order=name.asc',{headers:SB});
+    const agents=await res.json();
+    const tbody=document.getElementById('agentsBody');
+    if(!agents||!agents.length){tbody.innerHTML='<tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--muted)">No agents registered yet.</td></tr>';return;}
+    tbody.innerHTML=agents.map(a=>`
+      <tr>
+        <td style="font-weight:600">${a.name}</td>
+        <td class="badge-email">${a.email}</td>
+        <td class="mono">${a.password}</td>
+        <td class="mono">${a.created_at ? fmt12(a.created_at) : '—'}</td>
+        <td>
+          <div class="pw-row">
+            <input type="text" id="pw_${a.id}" placeholder="New password" style="width:140px;padding:.35rem .6rem;font-size:.8rem;">
+            <button class="btn btn-purple btn-sm" onclick="resetPassword(${a.id})">Save</button>
+            <button class="btn btn-red btn-sm" onclick="deleteAgent(${a.id},'${a.name}')">Delete</button>
+          </div>
+        </td>
+      </tr>`).join('');
+  }
+
+  async function resetPassword(id){
+    const newPw=document.getElementById('pw_'+id).value.trim();
+    if(!newPw){toast('Enter a new password','var(--red)');return;}
+    const res=await fetch(SUPABASE_URL+'/rest/v1/agents?id=eq.'+id,{
+      method:'PATCH',headers:{...SB,'Prefer':'return=minimal'},
+      body:JSON.stringify({password:newPw})
+    });
+    if(res.ok){toast('Password updated');loadAgents();}
+    else toast('Failed to update','var(--red)');
+  }
+
+  async function deleteAgent(id,name){
+    if(!confirm('Delete agent "'+name+'" and all their events?'))return;
+    await fetch(SUPABASE_URL+'/rest/v1/events?agent_name=eq.'+encodeURIComponent(name),{method:'DELETE',headers:SB});
+    await fetch(SUPABASE_URL+'/rest/v1/agents?id=eq.'+id,{method:'DELETE',headers:SB});
+    toast('Agent deleted','var(--red)');loadAgents();loadEvents();
+  }
+
+  // ── Danger ────────────────────────────────────────────────────────────────
   async function clearToday(){
     if(!confirm('Delete ALL events from today? This cannot be undone.'))return;
-    await fetch(SUPABASE_URL+'/rest/v1/events?event_date=eq.'+todayStr(), {method:'DELETE', headers:SB_HEADERS});
-    toast("Today's events cleared",'var(--orange)');
-    loadEvents();
+    await fetch(SUPABASE_URL+'/rest/v1/events?event_date=eq.'+todayStr(),{method:'DELETE',headers:SB});
+    toast("Today's events cleared",'var(--orange)');loadEvents();
   }
-
-  // Initialize sort button label
-  document.getElementById('sortBtn').className = 'btn-sort desc';
-
-  loadEvents();
 </script>
 </body>
 </html>
