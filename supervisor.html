@@ -7,8 +7,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{--navy:#1F3864;--blue:#2E75B6;--bg:#0f1e35;--card:#162844;--border:#243a5e;--text:#e8edf5;--muted:#8aa0bd;--green:#4caf7d;--orange:#f59e0b;--red:#ef4444;--purple:#a78bfa;--row-alt:#111e33;}
-  /* Lock */
+  :root{--navy:#1F3864;--blue:#2E75B6;--bg:#0f1e35;--card:#162844;--border:#243a5e;--text:#e8edf5;--muted:#8aa0bd;--green:#4caf7d;--orange:#f59e0b;--red:#ef4444;--purple:#a78bfa;--row-alt:#111e33;--warn:#f59e0b;--alert:#ef4444;}
   .lock{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;}
   .lock-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:360px;text-align:center;}
   .lock-card h2{font-size:1.2rem;font-weight:700;margin-bottom:.5rem;}
@@ -18,7 +17,6 @@
   .lock-card .lock-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.8rem;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;}
   .lock-card .lock-btn:hover{opacity:.88;}
   .lock-err{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.2em;}
-  /* Layout */
   body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem;}
   #mainContent{display:none;}
   header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:2rem;}
@@ -26,18 +24,16 @@
   h1{font-size:1.5rem;font-weight:700;}
   .live-clock{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:700;color:var(--blue);text-align:right;}
   .live-date{font-size:.75rem;color:var(--muted);text-align:right;margin-top:.2rem;}
-  /* Tabs */
-  .tabs{display:flex;gap:.75rem;margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:.1rem;}
-  .tab-btn{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;padding:.5rem 1rem .75rem;cursor:pointer;transition:color .15s;margin-bottom:-1px;}
+  .tabs{display:flex;gap:.75rem;margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:.1rem;flex-wrap:wrap;}
+  .tab-btn{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;padding:.5rem 1rem .75rem;cursor:pointer;transition:color .15s;margin-bottom:-1px;}
   .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);}
   .tab-btn:hover{color:var(--text);}
   .tab-pane{display:none;}.tab-pane.active{display:block;}
-  .tab-locked{opacity:.4;cursor:not-allowed !important;}
-  /* Controls */
   .controls{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;}
   .controls label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
-  input[type="date"],input[type="text"],input[type="password"]{background:var(--card);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:.5rem .9rem;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;}
-  input[type="text"]{width:180px;}input[type="text"]::placeholder,input[type="password"]::placeholder{color:var(--muted);}
+  input[type="date"],input[type="text"],input[type="password"],input[type="number"]{background:var(--card);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:.5rem .9rem;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;}
+  input[type="text"]{width:180px;}
+  input[type="text"]::placeholder,input[type="password"]::placeholder{color:var(--muted);}
   input:focus{border-color:var(--blue);}
   .btn{padding:.5rem .9rem;border:none;border-radius:7px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:opacity .15s;}
   .btn:hover{opacity:.85;}
@@ -45,23 +41,26 @@
   .btn-red{background:var(--red);color:#fff;}.btn-orange{background:var(--orange);color:#fff;}
   .btn-muted{background:var(--border);color:var(--text);}.btn-purple{background:var(--purple);color:#fff;}
   .btn-sm{padding:.3rem .6rem;font-size:.75rem;}
-  /* Stats */
   .stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1rem;margin-bottom:1.5rem;}
   .stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;}
   .stat-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.4rem;}
   .stat-val{font-size:1.5rem;font-weight:700;}
-  .green{color:var(--green)}.orange{color:var(--orange)}.red{color:var(--red)}.purple{color:var(--purple)}.smono{font-family:'JetBrains Mono',monospace;font-size:1.1rem;}
-  /* Table */
+  .cv-green{color:var(--green)}.cv-orange{color:var(--orange)}.cv-red{color:var(--red)}.cv-purple{color:var(--purple)}.smono{font-family:'JetBrains Mono',monospace;font-size:1.1rem;}
   .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;}
-  table{width:100%;border-collapse:collapse;font-size:.875rem;}
-  thead th{background:var(--navy);padding:.85rem 1rem;text-align:left;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);cursor:pointer;user-select:none;white-space:nowrap;}
+  table{width:100%;border-collapse:collapse;font-size:.82rem;}
+  thead th{background:var(--navy);padding:.8rem 1rem;text-align:left;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);cursor:pointer;user-select:none;white-space:nowrap;}
   thead th:hover{color:var(--text);}
   thead th.sort-asc::after{content:' ↑';color:var(--blue);}thead th.sort-desc::after{content:' ↓';color:var(--blue);}
   thead th.no-sort{cursor:default;}thead th.no-sort:hover{color:var(--muted);}
-  tbody tr{border-bottom:1px solid var(--border);}tbody tr:last-child{border-bottom:none;}
-  tbody tr:hover{background:rgba(46,117,182,.07);}tbody tr:nth-child(even){background:var(--row-alt);}
-  tbody tr:nth-child(even):hover{background:rgba(46,117,182,.07);}
-  td{padding:.85rem 1rem;vertical-align:middle;}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .15s;}tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:rgba(46,117,182,.07)!important;}
+  tbody tr:nth-child(even){background:var(--row-alt);}
+  tbody tr.row-warn{background:rgba(245,158,11,.08)!important;}
+  tbody tr.row-warn:nth-child(even){background:rgba(245,158,11,.12)!important;}
+  tbody tr.row-alert{background:rgba(239,68,68,.1)!important;}
+  tbody tr.row-alert:nth-child(even){background:rgba(239,68,68,.14)!important;}
+  tbody tr.row-flagged{background:rgba(239,68,68,.15)!important;outline:1px solid rgba(239,68,68,.4);}
+  td{padding:.8rem 1rem;vertical-align:middle;}
   .agent-name{font-weight:600;}
   .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.5rem;flex-shrink:0;}
   .dot-working{background:var(--green);box-shadow:0 0 6px var(--green);}
@@ -70,41 +69,55 @@
   .dot-clocked_out{background:var(--red);}.dot-not_clocked_in{background:var(--muted);}
   .status-text{font-size:.8rem;font-weight:500;display:flex;align-items:center;}
   .status-text.working{color:var(--green)}.status-text.on_break{color:var(--orange)}.status-text.on_lunch{color:var(--purple)}.status-text.clocked_out{color:var(--red)}.status-text.not_clocked_in{color:var(--muted);}
-  .tmono{font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:500;}
+  .tmono{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:500;}
+  .flag-badge{display:inline-block;background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red);border-radius:5px;font-size:.65rem;font-weight:700;padding:.1rem .4rem;margin-left:.4rem;vertical-align:middle;}
   .empty-state{text-align:center;padding:3rem;color:var(--muted);font-size:.9rem;}
   .pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;margin-right:.4rem;}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
   .refresh-badge{font-size:.7rem;color:var(--muted);margin-left:auto;}
-  /* Card */
   .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;}
   .card h2{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
   .controls-row{display:flex;gap:.75rem;align-items:center;margin-bottom:1rem;flex-wrap:wrap;}
   .mono{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted);}
-  .etype{display:inline-block;padding:.15rem .55rem;border-radius:4px;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+  .etype{display:inline-block;padding:.15rem .55rem;border-radius:4px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
   .etype-clock_in{background:rgba(76,175,125,.15);color:var(--green);}
   .etype-clock_out{background:rgba(239,68,68,.15);color:var(--red);}
   .etype-break_start,.etype-break_end{background:rgba(245,158,11,.15);color:var(--orange);}
   .etype-lunch_start,.etype-lunch_end{background:rgba(167,139,250,.15);color:var(--purple);}
-  .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--green);color:var(--green);padding:.7rem 1.2rem;border-radius:8px;font-size:.85rem;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;}
+  .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--green);color:var(--green);padding:.7rem 1.2rem;border-radius:8px;font-size:.85rem;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
   .toast.show{opacity:1;}
   .danger-zone{border-color:rgba(239,68,68,.3);}.danger-zone h2{color:rgba(239,68,68,.7);}
   .pw-row{display:flex;gap:.5rem;align-items:center;}
   .pw-row input{flex:1;padding:.35rem .6rem;font-size:.8rem;}
   .badge-email{font-size:.72rem;color:var(--muted);font-family:'JetBrains Mono',monospace;}
-  /* Mini lock for Agent Accounts tab */
   .mini-lock{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;text-align:center;max-width:340px;margin:2rem auto;}
   .mini-lock h3{font-size:1rem;font-weight:700;margin-bottom:.4rem;}
   .mini-lock p{font-size:.8rem;color:var(--muted);margin-bottom:1rem;}
   .mini-lock input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.7rem 1rem;color:var(--text);font-family:'Inter',sans-serif;font-size:.95rem;outline:none;margin-bottom:.75rem;text-align:center;letter-spacing:.1em;}
   .mini-lock input:focus{border-color:var(--blue);}
   .mini-lock .lock-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.75rem;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;}
-  .mini-lock .lock-btn:hover{opacity:.88;}
   .mini-lock-err{color:var(--red);font-size:.8rem;margin-top:.5rem;min-height:1.2em;}
+  /* Weekly summary */
+  .weekly-table thead th{font-size:.68rem;padding:.6rem .75rem;}
+  .weekly-table td{padding:.6rem .75rem;font-size:.82rem;}
+  .week-nav{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;}
+  .week-nav span{font-weight:600;font-size:.9rem;min-width:200px;text-align:center;}
+  /* Settings */
+  .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  @media(max-width:700px){.settings-grid{grid-template-columns:1fr;}}
+  .setting-row{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border);}
+  .setting-row:last-child{border-bottom:none;}
+  .setting-label{font-size:.85rem;font-weight:500;}
+  .setting-sub{font-size:.75rem;color:var(--muted);margin-top:.15rem;}
+  .setting-input{display:flex;align-items:center;gap:.5rem;}
+  .setting-input input{width:80px;text-align:center;}
+  .color-legend{display:flex;gap:1rem;margin-top:1rem;font-size:.78rem;flex-wrap:wrap;}
+  .color-legend span{display:flex;align-items:center;gap:.4rem;}
+  .color-legend .dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
 </style>
 </head>
 <body>
 
-<!-- Main lock -->
 <div class="lock" id="lockScreen">
   <div class="lock-card">
     <h2>Supervisor Dashboard</h2>
@@ -121,15 +134,17 @@
   <div><div class="live-clock" id="liveClock">--:--:--</div><div class="live-date" id="liveDate"></div></div>
 </header>
 
-<!-- Tabs -->
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('dashboard',event)">Dashboard</button>
+  <button class="tab-btn" onclick="switchTab('weekly',event)">Weekly Summary</button>
   <button class="tab-btn" onclick="switchTab('events',event)">Events Log</button>
   <button class="tab-btn" onclick="switchTab('accounts',event)">Agent Accounts</button>
+  <button class="tab-btn" onclick="switchTab('audit',event)">Audit Log</button>
+  <button class="tab-btn" onclick="switchTab('settings',event)">Settings</button>
   <button class="tab-btn" onclick="switchTab('danger',event)">Danger Zone</button>
 </div>
 
-<!-- Tab: Dashboard -->
+<!-- DASHBOARD -->
 <div class="tab-pane active" id="tab-dashboard">
   <div class="controls">
     <label>Date</label>
@@ -137,15 +152,21 @@
     <button class="btn btn-blue" onclick="goToday()">Today</button>
     <input type="text" id="searchFilter" placeholder="Filter by agent…">
     <button class="btn btn-green" onclick="exportCSV()">⬇ Export CSV</button>
-    <span class="refresh-badge"><span class="pulse"></span>Live · updates every 5s</span>
+    <span class="refresh-badge"><span class="pulse"></span>Live · every 5s</span>
   </div>
   <div class="stats-bar">
     <div class="stat-card"><div class="stat-label">Total Agents</div><div class="stat-val" id="statTotal">—</div></div>
-    <div class="stat-card"><div class="stat-label">Active (Clocked In)</div><div class="stat-val green" id="statActive">—</div></div>
-    <div class="stat-card"><div class="stat-label">On Break / Lunch</div><div class="stat-val orange" id="statAway">—</div></div>
-    <div class="stat-card"><div class="stat-label">Clocked Out</div><div class="stat-val red" id="statOut">—</div></div>
+    <div class="stat-card"><div class="stat-label">Active (Clocked In)</div><div class="stat-val cv-green" id="statActive">—</div></div>
+    <div class="stat-card"><div class="stat-label">On Break / Lunch</div><div class="stat-val cv-orange" id="statAway">—</div></div>
+    <div class="stat-card"><div class="stat-label">Clocked Out</div><div class="stat-val cv-red" id="statOut">—</div></div>
     <div class="stat-card"><div class="stat-label">Avg Work Time</div><div class="stat-val smono" id="statAvg">—</div></div>
   </div>
+  <div class="color-legend">
+    <span><span class="dot" style="background:rgba(245,158,11,.3)"></span>Break/Lunch over warn threshold</span>
+    <span><span class="dot" style="background:rgba(239,68,68,.25)"></span>Break/Lunch over max threshold</span>
+    <span><span class="dot" style="background:rgba(239,68,68,.35);outline:1px solid rgba(239,68,68,.6)"></span>Still clocked in after alert time</span>
+  </div>
+  <br>
   <div class="table-wrap">
     <table>
       <thead><tr>
@@ -163,7 +184,24 @@
   </div>
 </div>
 
-<!-- Tab: Events Log -->
+<!-- WEEKLY SUMMARY -->
+<div class="tab-pane" id="tab-weekly">
+  <div class="week-nav">
+    <button class="btn btn-muted" onclick="changeWeek(-1)">← Prev</button>
+    <span id="weekLabel">—</span>
+    <button class="btn btn-muted" onclick="changeWeek(1)">Next →</button>
+    <button class="btn btn-blue" onclick="goCurrentWeek()">This Week</button>
+    <button class="btn btn-green" onclick="exportWeeklyCSV()">⬇ Export CSV</button>
+  </div>
+  <div class="table-wrap">
+    <table class="weekly-table">
+      <thead id="weeklyHead"><tr><td colspan="8" class="empty-state">Loading…</td></tr></thead>
+      <tbody id="weeklyBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- EVENTS LOG -->
 <div class="tab-pane" id="tab-events">
   <div class="card">
     <h2>Events Log
@@ -184,7 +222,7 @@
   </div>
 </div>
 
-<!-- Tab: Agent Accounts (requires extra password) -->
+<!-- AGENT ACCOUNTS -->
 <div class="tab-pane" id="tab-accounts">
   <div class="mini-lock" id="accountsLock">
     <h3>🔒 Restricted Access</h3>
@@ -199,14 +237,87 @@
       <div style="overflow-x:auto;">
         <table>
           <thead><tr><th>Name</th><th>Email</th><th>Password</th><th>Registered</th><th>Actions</th></tr></thead>
-          <tbody id="agentsBody"><tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--muted)">Loading…</td></tr></tbody>
+          <tbody id="agentsBody"></tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Tab: Danger Zone -->
+<!-- AUDIT LOG -->
+<div class="tab-pane" id="tab-audit">
+  <div class="card">
+    <h2>Audit Log <button class="btn btn-muted btn-sm" onclick="loadAudit()" style="font-size:.75rem">Refresh</button></h2>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>ID</th><th>Action</th><th>Target</th><th>Performed By</th><th>Time (BZE)</th></tr></thead>
+        <tbody id="auditBody"><tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--muted)">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="tab-pane" id="tab-settings">
+  <div class="settings-grid">
+    <div class="card">
+      <h2>Alert Time</h2>
+      <div class="setting-row">
+        <div><div class="setting-label">Clock-in Alert Time (BZE)</div><div class="setting-sub">Flag agents still clocked in after this time</div></div>
+        <div class="setting-input">
+          <input type="time" id="alertTime" style="width:120px">
+          <button class="btn btn-blue btn-sm" onclick="saveSetting('alert_time','alertTime')">Save</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Break Thresholds</h2>
+      <div class="setting-row">
+        <div><div class="setting-label">Warn after (minutes)</div><div class="setting-sub">Row turns orange</div></div>
+        <div class="setting-input">
+          <input type="number" id="breakWarn" min="1" max="120" style="width:80px">
+          <button class="btn btn-orange btn-sm" onclick="saveSetting('break_warn_mins','breakWarn')">Save</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Alert after (minutes)</div><div class="setting-sub">Row turns red</div></div>
+        <div class="setting-input">
+          <input type="number" id="breakMax" min="1" max="120" style="width:80px">
+          <button class="btn btn-red btn-sm" onclick="saveSetting('break_max_mins','breakMax')">Save</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Lunch Thresholds</h2>
+      <div class="setting-row">
+        <div><div class="setting-label">Warn after (minutes)</div><div class="setting-sub">Row turns orange</div></div>
+        <div class="setting-input">
+          <input type="number" id="lunchWarn" min="1" max="180" style="width:80px">
+          <button class="btn btn-orange btn-sm" onclick="saveSetting('lunch_warn_mins','lunchWarn')">Save</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Alert after (minutes)</div><div class="setting-sub">Row turns red</div></div>
+        <div class="setting-input">
+          <input type="number" id="lunchMax" min="1" max="180" style="width:80px">
+          <button class="btn btn-red btn-sm" onclick="saveSetting('lunch_max_mins','lunchMax')">Save</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Supervisor Password</h2>
+      <div class="setting-row">
+        <div><div class="setting-label">Change dashboard password</div><div class="setting-sub">Used to unlock this dashboard</div></div>
+        <div class="setting-input" style="flex-direction:column;align-items:flex-end;gap:.4rem">
+          <input type="password" id="newSupPw" placeholder="New password" style="width:160px">
+          <button class="btn btn-purple btn-sm" onclick="changeSupPassword()">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DANGER ZONE -->
 <div class="tab-pane" id="tab-danger">
   <div class="card danger-zone">
     <h2>⚠ Danger Zone</h2>
@@ -221,27 +332,12 @@
 <script>
   const SUPABASE_URL      = "https://fmnvpaynzcshcfyojvul.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZtbnZwYXluemNzaGNmeW9qdnVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDc5NjgsImV4cCI6MjA5NjY4Mzk2OH0.Ib9fgnWF9wOB2napqTUygrdIP0pIjNy9TVJMZrRDz64";
-  const SB = {'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
+  const SB     = {'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
   const SB_GET = {'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY};
-  const PW_SUPERVISOR = "LawftyAD";
-  const PW_ADMIN      = "JGut@1432";
+  const PW_ADMIN = "JGut@1432";
 
-  // ── Lock ──────────────────────────────────────────────────────────────────
-  function unlock(){
-    if(document.getElementById('lockInput').value===PW_SUPERVISOR){
-      document.getElementById('lockScreen').style.display='none';
-      document.getElementById('mainContent').style.display='block';
-      fetchData(); loadEvents();
-    }else{document.getElementById('lockErr').textContent='Incorrect password.';document.getElementById('lockInput').value='';}
-  }
-
-  function unlockAccounts(){
-    if(document.getElementById('adminPwInput').value===PW_ADMIN){
-      document.getElementById('accountsLock').style.display='none';
-      document.getElementById('accountsContent').style.display='block';
-      loadAgents();
-    }else{document.getElementById('adminPwErr').textContent='Incorrect admin password.';document.getElementById('adminPwInput').value='';}
-  }
+  // Settings cache
+  let cfg = { alert_time:'22:00', break_warn_mins:15, break_max_mins:30, lunch_warn_mins:45, lunch_max_mins:60, sup_password_hash:'LawftyAD' };
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   function bzNow(){return new Date(Date.now()-6*3600000);}
@@ -255,16 +351,85 @@
     const ap=h>=12?'PM':'AM';h=h%12||12;
     return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+ap;
   }
+  function nowUTC(){return new Date().toISOString().replace('T',' ').slice(0,19);}
   function toast(msg,color='var(--green)'){
     const el=document.getElementById('toast');
     el.textContent=msg;el.style.borderColor=color;el.style.color=color;
-    el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500);
+    el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);
   }
   function switchTab(name,e){
     document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
     document.getElementById('tab-'+name).classList.add('active');
     if(e&&e.target)e.target.classList.add('active');
+    if(name==='weekly')renderWeekly();
+    if(name==='audit')loadAudit();
+  }
+
+  // ── Lock ──────────────────────────────────────────────────────────────────
+  async function unlock(){
+    const val=document.getElementById('lockInput').value;
+    // Check against Supabase settings table
+    try{
+      const res=await fetch(SUPABASE_URL+'/rest/v1/settings?key=eq.sup_password_hash',{headers:SB_GET});
+      const rows=await res.json();
+      const stored=(rows&&rows.length)?rows[0].value:'LawftyAD';
+      if(val===stored){
+        document.getElementById('lockScreen').style.display='none';
+        document.getElementById('mainContent').style.display='block';
+        await loadSettings();
+        fetchData();loadEvents();
+      }else{document.getElementById('lockErr').textContent='Incorrect password.';document.getElementById('lockInput').value='';}
+    }catch(e){
+      // Fallback if Supabase unreachable
+      if(val==='LawftyAD'){document.getElementById('lockScreen').style.display='none';document.getElementById('mainContent').style.display='block';fetchData();loadEvents();}
+      else{document.getElementById('lockErr').textContent='Incorrect password.';}
+    }
+  }
+
+  function unlockAccounts(){
+    if(document.getElementById('adminPwInput').value===PW_ADMIN){
+      document.getElementById('accountsLock').style.display='none';
+      document.getElementById('accountsContent').style.display='block';
+      loadAgents();
+    }else{document.getElementById('adminPwErr').textContent='Incorrect admin password.';document.getElementById('adminPwInput').value='';}
+  }
+
+  // ── Settings ──────────────────────────────────────────────────────────────
+  async function loadSettings(){
+    try{
+      const res=await fetch(SUPABASE_URL+'/rest/v1/settings',{headers:SB_GET});
+      const rows=await res.json();
+      rows.forEach(r=>{cfg[r.key]=isNaN(r.value)?r.value:Number(r.value);});
+      // Populate settings UI
+      document.getElementById('alertTime').value=cfg.alert_time||'22:00';
+      document.getElementById('breakWarn').value=cfg.break_warn_mins||15;
+      document.getElementById('breakMax').value=cfg.break_max_mins||30;
+      document.getElementById('lunchWarn').value=cfg.lunch_warn_mins||45;
+      document.getElementById('lunchMax').value=cfg.lunch_max_mins||60;
+    }catch(e){}
+  }
+
+  async function saveSetting(key,inputId){
+    const val=document.getElementById(inputId).value;
+    await fetch(SUPABASE_URL+'/rest/v1/settings?key=eq.'+key,{
+      method:'PATCH',headers:{...SB,'Prefer':'return=minimal'},body:JSON.stringify({value:String(val)})
+    });
+    cfg[key]=isNaN(val)?val:Number(val);
+    toast('Setting saved');
+    await writeAudit('Setting changed: '+key, val, 'Supervisor');
+  }
+
+  async function changeSupPassword(){
+    const newPw=document.getElementById('newSupPw').value.trim();
+    if(!newPw){toast('Enter a new password','var(--red)');return;}
+    await fetch(SUPABASE_URL+'/rest/v1/settings?key=eq.sup_password_hash',{
+      method:'PATCH',headers:{...SB,'Prefer':'return=minimal'},body:JSON.stringify({value:newPw})
+    });
+    cfg.sup_password_hash=newPw;
+    document.getElementById('newSupPw').value='';
+    toast('Supervisor password updated');
+    await writeAudit('Supervisor password changed','—','Supervisor');
   }
 
   // ── Clock ─────────────────────────────────────────────────────────────────
@@ -288,31 +453,45 @@
 
   function computeTotals(events){
     let ws=0,bs=0,ls=0,status='not_clocked_in',ci=null,bst=null,lst=null;
-    let firstClockIn=null,lastClockOut=null;
+    let firstClockIn=null,lastClockOut=null,currentBreakStart=null,currentLunchStart=null;
     for(const ev of events){
       const ts=new Date(ev.timestamp.replace(' ','T')+'Z');
-      if(ev.event_type==='clock_in'){
-        if(!firstClockIn)firstClockIn=ev.timestamp;
-        ci=ts;status='working';
-      }
+      if(ev.event_type==='clock_in'){if(!firstClockIn)firstClockIn=ev.timestamp;ci=ts;status='working';currentBreakStart=null;currentLunchStart=null;}
       else if(ev.event_type==='clock_out'){if(ci)ws+=(ts-ci)/1000;ci=null;status='clocked_out';lastClockOut=ev.timestamp;}
-      else if(ev.event_type==='break_start'){if(ci)ws+=(ts-ci)/1000;ci=null;bst=ts;status='on_break';}
-      else if(ev.event_type==='break_end'){if(bst)bs+=(ts-bst)/1000;bst=null;ci=ts;status='working';}
-      else if(ev.event_type==='lunch_start'){if(ci)ws+=(ts-ci)/1000;ci=null;lst=ts;status='on_lunch';}
-      else if(ev.event_type==='lunch_end'){if(lst)ls+=(ts-lst)/1000;lst=null;ci=ts;status='working';}
+      else if(ev.event_type==='break_start'){if(ci)ws+=(ts-ci)/1000;ci=null;bst=ts;status='on_break';currentBreakStart=ts;}
+      else if(ev.event_type==='break_end'){if(bst)bs+=(ts-bst)/1000;bst=null;ci=ts;status='working';currentBreakStart=null;}
+      else if(ev.event_type==='lunch_start'){if(ci)ws+=(ts-ci)/1000;ci=null;lst=ts;status='on_lunch';currentLunchStart=ts;}
+      else if(ev.event_type==='lunch_end'){if(lst)ls+=(ts-lst)/1000;lst=null;ci=ts;status='working';currentLunchStart=null;}
     }
     const now=new Date();
     if(ci&&status==='working')ws+=Math.max(0,(now-ci)/1000);
     if(bst&&status==='on_break')bs+=Math.max(0,(now-bst)/1000);
     if(lst&&status==='on_lunch')ls+=Math.max(0,(now-lst)/1000);
+    // Current break/lunch elapsed
+    const breakElapsed=currentBreakStart?Math.floor((now-currentBreakStart)/1000):0;
+    const lunchElapsed=currentLunchStart?Math.floor((now-currentLunchStart)/1000):0;
     const total=ws+bs+ls;
-    return{
-      work_seconds:Math.max(0,Math.floor(ws)),
-      break_seconds:Math.max(0,Math.floor(bs)),
-      lunch_seconds:Math.max(0,Math.floor(ls)),
-      total_seconds:Math.max(0,Math.floor(total)),
-      status,firstClockIn,lastClockOut
-    };
+    return{work_seconds:Math.max(0,Math.floor(ws)),break_seconds:Math.max(0,Math.floor(bs)),lunch_seconds:Math.max(0,Math.floor(ls)),total_seconds:Math.max(0,Math.floor(total)),status,firstClockIn,lastClockOut,breakElapsed,lunchElapsed};
+  }
+
+  function getRowClass(agent){
+    const bz=bzNow();
+    const bzHHMM=String(bz.getUTCHours()).padStart(2,'0')+':'+String(bz.getUTCMinutes()).padStart(2,'0');
+    // Check clock-in alert
+    if(['working','on_break','on_lunch'].includes(agent.status)&&isToday&&bzHHMM>=cfg.alert_time) return 'row-flagged';
+    // Break color
+    if(agent.status==='on_break'){
+      const mins=Math.floor(agent.breakElapsed/60);
+      if(mins>=cfg.break_max_mins)return 'row-alert';
+      if(mins>=cfg.break_warn_mins)return 'row-warn';
+    }
+    // Lunch color
+    if(agent.status==='on_lunch'){
+      const mins=Math.floor(agent.lunchElapsed/60);
+      if(mins>=cfg.lunch_max_mins)return 'row-alert';
+      if(mins>=cfg.lunch_warn_mins)return 'row-warn';
+    }
+    return '';
   }
 
   async function fetchData(){
@@ -325,12 +504,8 @@
       const now=Date.now();
       allAgents=Object.entries(byAgent).map(([name,evs])=>{
         const t=computeTotals(evs);
-        tickAnchors[name]={base:{w:t.work_seconds,b:t.break_seconds,l:t.lunch_seconds,tot:t.total_seconds},fetchedAt:now,status:t.status};
-        return{name,...t,
-          work_fmt:fmtHMS(t.work_seconds),break_fmt:fmtHMS(t.break_seconds),
-          lunch_fmt:fmtHMS(t.lunch_seconds),total_fmt:fmtHMS(t.total_seconds),
-          clock_in_fmt:fmt12(t.firstClockIn),clock_out_fmt:t.lastClockOut?fmt12(t.lastClockOut):'—'
-        };
+        tickAnchors[name]={base:{w:t.work_seconds,b:t.break_seconds,l:t.lunch_seconds,tot:t.total_seconds,be:t.breakElapsed,le:t.lunchElapsed},fetchedAt:now,status:t.status};
+        return{name,...t,work_fmt:fmtHMS(t.work_seconds),break_fmt:fmtHMS(t.break_seconds),lunch_fmt:fmtHMS(t.lunch_seconds),total_fmt:fmtHMS(t.total_seconds),clock_in_fmt:fmt12(t.firstClockIn),clock_out_fmt:t.lastClockOut?fmt12(t.lastClockOut):'—'};
       });
       if(isToday)startLiveTick();else stopLiveTick();
       updateStats();renderTable();
@@ -345,10 +520,9 @@
         const anc=tickAnchors[a.name];if(!anc)return;
         const el=Math.floor((now-anc.fetchedAt)/1000);
         if(a.status==='working'){a.work_seconds=Math.max(0,anc.base.w+el);a.total_seconds=Math.max(0,anc.base.tot+el);}
-        else if(a.status==='on_break'){a.break_seconds=Math.max(0,anc.base.b+el);a.total_seconds=Math.max(0,anc.base.tot+el);}
-        else if(a.status==='on_lunch'){a.lunch_seconds=Math.max(0,anc.base.l+el);a.total_seconds=Math.max(0,anc.base.tot+el);}
-        a.work_fmt=fmtHMS(a.work_seconds);a.break_fmt=fmtHMS(a.break_seconds);
-        a.lunch_fmt=fmtHMS(a.lunch_seconds);a.total_fmt=fmtHMS(a.total_seconds);
+        else if(a.status==='on_break'){a.break_seconds=Math.max(0,anc.base.b+el);a.total_seconds=Math.max(0,anc.base.tot+el);a.breakElapsed=Math.max(0,anc.base.be+el);}
+        else if(a.status==='on_lunch'){a.lunch_seconds=Math.max(0,anc.base.l+el);a.total_seconds=Math.max(0,anc.base.tot+el);a.lunchElapsed=Math.max(0,anc.base.le+el);}
+        a.work_fmt=fmtHMS(a.work_seconds);a.break_fmt=fmtHMS(a.break_seconds);a.lunch_fmt=fmtHMS(a.lunch_seconds);a.total_fmt=fmtHMS(a.total_seconds);
       });
       renderTimerCells();updateStats();
     },1000);
@@ -361,26 +535,25 @@
       row.querySelector('.cell-break').textContent=a.break_fmt;
       row.querySelector('.cell-lunch').textContent=a.lunch_fmt;
       row.querySelector('.cell-total').textContent=a.total_fmt;
+      // Update row color
+      row.className=getRowClass(a);
     });
   }
 
   const STATUS_ORDER={working:0,on_break:1,on_lunch:2,clocked_out:3,not_clocked_in:4};
   const STATUS_LABELS={working:'Working',on_break:'On Break',on_lunch:'On Lunch',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
-
   function getFiltered(){const q=document.getElementById('searchFilter').value.trim().toLowerCase();return allAgents.filter(a=>!q||a.name.toLowerCase().includes(q));}
   function getSorted(agents){return[...agents].sort((a,b)=>{let va=a[sortCol],vb=b[sortCol];if(sortCol==='status'){va=STATUS_ORDER[va]??9;vb=STATUS_ORDER[vb]??9;}if(typeof va==='string')return sortDir*va.localeCompare(vb);return sortDir*(va-vb);});}
   function sortBy(col){
     sortDir=sortCol===col?sortDir*-1:1;sortCol=col;
     const cols=['name','status',null,null,'work_seconds','break_seconds','lunch_seconds','total_seconds'];
-    document.querySelectorAll('thead th').forEach((th,i)=>{th.classList.remove('sort-asc','sort-desc');if(cols[i]===col)th.classList.add(sortDir===1?'sort-asc':'sort-desc');});
+    document.querySelectorAll('#tab-dashboard thead th').forEach((th,i)=>{th.classList.remove('sort-asc','sort-desc');if(cols[i]===col)th.classList.add(sortDir===1?'sort-asc':'sort-desc');});
     renderTable();
   }
   function updateStats(){
     const a=getFiltered();
     document.getElementById('statTotal').textContent=a.length;
-    // Active = working + on_break + on_lunch (all clocked in)
     document.getElementById('statActive').textContent=a.filter(x=>['working','on_break','on_lunch'].includes(x.status)).length;
-    // Away = on break or lunch specifically
     document.getElementById('statAway').textContent=a.filter(x=>x.status==='on_break'||x.status==='on_lunch').length;
     document.getElementById('statOut').textContent=a.filter(x=>x.status==='clocked_out').length;
     const avg=a.length?a.reduce((s,x)=>s+x.work_seconds,0)/a.length:0;
@@ -389,9 +562,11 @@
   function renderTable(){
     const agents=getSorted(getFiltered());const tbody=document.getElementById('tableBody');
     if(!agents.length){tbody.innerHTML='<tr><td colspan="8" class="empty-state">No agents found.</td></tr>';return;}
-    tbody.innerHTML=agents.map(a=>`
-      <tr data-name="${a.name}">
-        <td class="agent-name">${a.name}</td>
+    tbody.innerHTML=agents.map(a=>{
+      const rc=getRowClass(a);
+      const flagBadge=rc==='row-flagged'?'<span class="flag-badge">⚠ ALERT</span>':'';
+      return`<tr data-name="${a.name}" class="${rc}">
+        <td class="agent-name">${a.name}${flagBadge}</td>
         <td><span class="status-text ${a.status}"><span class="status-dot dot-${a.status}"></span>${STATUS_LABELS[a.status]||a.status}</span></td>
         <td><span class="tmono">${a.clock_in_fmt}</span></td>
         <td><span class="tmono">${a.clock_out_fmt}</span></td>
@@ -399,7 +574,8 @@
         <td><span class="tmono cell-break">${a.break_fmt}</span></td>
         <td><span class="tmono cell-lunch">${a.lunch_fmt}</span></td>
         <td><span class="tmono cell-total">${a.total_fmt}</span></td>
-      </tr>`).join('');
+      </tr>`;
+    }).join('');
   }
   function exportCSV(){
     const day=document.getElementById('dateFilter').value;
@@ -411,6 +587,68 @@
     const link=document.createElement('a');link.href=url;link.download='timereport_'+day+'.csv';link.click();URL.revokeObjectURL(url);
   }
   fetchData();setInterval(fetchData,5000);
+
+  // ── Weekly Summary ────────────────────────────────────────────────────────
+  let weekOffset=0;
+  function getWeekDates(offset){
+    const bz=bzNow();
+    const day=bz.getUTCDay(); // 0=Sun
+    const monday=new Date(Date.UTC(bz.getUTCFullYear(),bz.getUTCMonth(),bz.getUTCDate()-(day===0?6:day-1)+(offset*7)));
+    const days=[];
+    for(let i=0;i<7;i++){const d=new Date(monday);d.setUTCDate(monday.getUTCDate()+i);days.push(d.toISOString().slice(0,10));}
+    return days;
+  }
+  function goCurrentWeek(){weekOffset=0;renderWeekly();}
+  function changeWeek(dir){weekOffset+=dir;renderWeekly();}
+
+  async function renderWeekly(){
+    const days=getWeekDates(weekOffset);
+    const DAY_NAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const start=days[0],end=days[6];
+    document.getElementById('weekLabel').textContent=start+' → '+end;
+    // Fetch all events for this week
+    try{
+      const res=await fetch(SUPABASE_URL+'/rest/v1/events?event_date=gte.'+start+'&event_date=lte.'+end+'&order=id.asc',{headers:SB_GET});
+      const events=await res.json();
+      // Group by agent then by date
+      const byAgent={};
+      for(const ev of events){
+        if(!byAgent[ev.agent_name])byAgent[ev.agent_name]={};
+        if(!byAgent[ev.agent_name][ev.event_date])byAgent[ev.agent_name][ev.event_date]=[];
+        byAgent[ev.agent_name][ev.event_date].push(ev);
+      }
+      // Build header
+      document.getElementById('weeklyHead').innerHTML='<tr><th>Agent</th>'+days.map((d,i)=>'<th>'+DAY_NAMES[i]+'<br><span style="font-weight:400;font-size:.65rem">'+d.slice(5)+'</span></th>').join('')+'<th>Total Work</th><th>Total Break</th><th>Total Lunch</th></tr>';
+      // Build rows
+      const agents=Object.keys(byAgent).sort();
+      if(!agents.length){document.getElementById('weeklyBody').innerHTML='<tr><td colspan="11" class="empty-state">No data for this week.</td></tr>';return;}
+      document.getElementById('weeklyBody').innerHTML=agents.map(name=>{
+        let totalW=0,totalB=0,totalL=0;
+        const dayCells=days.map(d=>{
+          const evs=byAgent[name][d]||[];
+          if(!evs.length)return'<td style="color:var(--muted);text-align:center">—</td>';
+          const t=computeTotals(evs);
+          totalW+=t.work_seconds;totalB+=t.break_seconds;totalL+=t.lunch_seconds;
+          return'<td><span class="tmono">'+fmtHMS(t.work_seconds)+'</span></td>';
+        });
+        return'<tr><td class="agent-name">'+name+'</td>'+dayCells.join('')+'<td><span class="tmono" style="color:var(--green)">'+fmtHMS(totalW)+'</span></td><td><span class="tmono" style="color:var(--orange)">'+fmtHMS(totalB)+'</span></td><td><span class="tmono" style="color:var(--purple)">'+fmtHMS(totalL)+'</span></td></tr>';
+      }).join('');
+    }catch(e){document.getElementById('weeklyBody').innerHTML='<tr><td colspan="11" class="empty-state">Could not load weekly data.</td></tr>';}
+  }
+
+  function exportWeeklyCSV(){
+    const days=getWeekDates(weekOffset);
+    const DAY_NAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const rows=document.querySelectorAll('#weeklyBody tr');
+    const csvRows=[['Agent',...days.map((d,i)=>DAY_NAMES[i]+' '+d),'Total Work','Total Break','Total Lunch']];
+    rows.forEach(row=>{
+      const cells=[...row.querySelectorAll('td')].map(td=>td.textContent.trim());
+      csvRows.push(cells);
+    });
+    const csv=csvRows.map(r=>r.map(v=>'"'+v+'"').join(',')).join('\n');
+    const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);
+    const link=document.createElement('a');link.href=url;link.download='weekly_'+days[0]+'_to_'+days[6]+'.csv';link.click();URL.revokeObjectURL(url);
+  }
 
   // ── Events Log ────────────────────────────────────────────────────────────
   let allEvents=[],eventsAsc=false;
@@ -444,32 +682,51 @@
         <td class="badge-email">${a.email}</td>
         <td class="mono">${a.password}</td>
         <td class="mono">${a.created_at?fmt12(a.created_at):'—'}</td>
-        <td>
-          <div class="pw-row">
-            <input type="text" id="pw_${a.id}" placeholder="New password">
-            <button class="btn btn-purple btn-sm" onclick="resetPassword(${a.id})">Save</button>
-            <button class="btn btn-red btn-sm" onclick="deleteAgent(${a.id},'${a.name}')">Delete</button>
-          </div>
-        </td>
+        <td><div class="pw-row">
+          <input type="text" id="pw_${a.id}" placeholder="New password">
+          <button class="btn btn-purple btn-sm" onclick="resetPassword(${a.id},'${a.name}')">Save</button>
+          <button class="btn btn-red btn-sm" onclick="deleteAgent(${a.id},'${a.name}')">Delete</button>
+        </div></td>
       </tr>`).join('');
   }
-  async function resetPassword(id){
+  async function resetPassword(id,name){
     const newPw=document.getElementById('pw_'+id).value.trim();
     if(!newPw){toast('Enter a new password','var(--red)');return;}
     const res=await fetch(SUPABASE_URL+'/rest/v1/agents?id=eq.'+id,{method:'PATCH',headers:{...SB,'Prefer':'return=minimal'},body:JSON.stringify({password:newPw})});
-    if(res.ok){toast('Password updated');loadAgents();}else toast('Failed','var(--red)');
+    if(res.ok){
+      toast('Password updated for '+name);
+      await writeAudit('Password reset','Agent: '+name,'Supervisor (Admin)');
+      loadAgents();
+    }else toast('Failed','var(--red)');
   }
   async function deleteAgent(id,name){
     if(!confirm('Delete agent "'+name+'" and all their events?'))return;
     await fetch(SUPABASE_URL+'/rest/v1/events?agent_name=eq.'+encodeURIComponent(name),{method:'DELETE',headers:SB});
     await fetch(SUPABASE_URL+'/rest/v1/agents?id=eq.'+id,{method:'DELETE',headers:SB});
+    await writeAudit('Agent deleted','Agent: '+name,'Supervisor (Admin)');
     toast('Agent deleted','var(--red)');loadAgents();loadEvents();
+  }
+
+  // ── Audit Log ─────────────────────────────────────────────────────────────
+  async function writeAudit(action,target,performedBy){
+    await fetch(SUPABASE_URL+'/rest/v1/audit_log',{
+      method:'POST',headers:{...SB,'Prefer':'return=minimal'},
+      body:JSON.stringify({action,target,performed_by:performedBy,timestamp:nowUTC()})
+    });
+  }
+  async function loadAudit(){
+    const res=await fetch(SUPABASE_URL+'/rest/v1/audit_log?order=id.desc&limit=200',{headers:SB_GET});
+    const rows=await res.json();
+    const tbody=document.getElementById('auditBody');
+    if(!rows||!rows.length){tbody.innerHTML='<tr><td colspan="5" style="padding:2rem;text-align:center;color:var(--muted)">No audit entries yet.</td></tr>';return;}
+    tbody.innerHTML=rows.map(r=>`<tr><td class="mono">${r.id}</td><td>${r.action}</td><td>${r.target||'—'}</td><td>${r.performed_by||'—'}</td><td class="mono">${fmt12(r.timestamp)}</td></tr>`).join('');
   }
 
   // ── Danger ────────────────────────────────────────────────────────────────
   async function clearToday(){
     if(!confirm('Delete ALL events from today? Cannot be undone.'))return;
     await fetch(SUPABASE_URL+'/rest/v1/events?event_date=eq.'+todayBZ(),{method:'DELETE',headers:SB});
+    await writeAudit('Cleared today\'s events',todayBZ(),'Supervisor');
     toast("Today's events cleared",'var(--orange)');loadEvents();fetchData();
   }
 </script>
