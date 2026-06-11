@@ -159,6 +159,7 @@
     <div class="stat-card"><div class="stat-label">Total Agents</div><div class="stat-val" id="statTotal">—</div></div>
     <div class="stat-card"><div class="stat-label">Active (Clocked In)</div><div class="stat-val cv-green" id="statActive">—</div></div>
     <div class="stat-card"><div class="stat-label">On Break / Lunch</div><div class="stat-val cv-orange" id="statAway">—</div></div>
+  <div class="stat-card"><div class="stat-label">On Restroom</div><div class="stat-val" style="color:var(--teal)" id="statRestroom">—</div></div>
     <div class="stat-card"><div class="stat-label">Clocked Out</div><div class="stat-val cv-red" id="statOut">—</div></div>
     <div class="stat-card"><div class="stat-label">Avg Work Time</div><div class="stat-val smono" id="statAvg">—</div></div>
   </div>
@@ -504,7 +505,7 @@
     const bz=bzNow();
     const bzHHMM=String(bz.getUTCHours()).padStart(2,'0')+':'+String(bz.getUTCMinutes()).padStart(2,'0');
     // Check clock-in alert
-    if(['working','on_break','on_lunch'].includes(agent.status)&&isToday&&bzHHMM>=cfg.alert_time) return 'row-flagged';
+    if(['working','on_break','on_lunch','on_restroom'].includes(agent.status)&&isToday&&bzHHMM>=cfg.alert_time) return 'row-flagged';
     // Break color
     if(agent.status==='on_break'){
       const mins=Math.floor(agent.breakElapsed/60);
@@ -575,7 +576,7 @@
   }
 
   const STATUS_ORDER={working:0,on_break:1,on_lunch:2,on_restroom:3,clocked_out:4,not_clocked_in:5};
-  const STATUS_LABELS={working:'Working',on_break:'On Break',on_lunch:'On Lunch',on_restroom:'Restroom',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
+  const STATUS_LABELS={working:'Working',on_break:'On Break',on_lunch:'On Lunch',on_restroom:'On Restroom',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
   function getFiltered(){const q=document.getElementById('searchFilter').value.trim().toLowerCase();return allAgents.filter(a=>!q||a.name.toLowerCase().includes(q));}
   function getSorted(agents){return[...agents].sort((a,b)=>{let va=a[sortCol],vb=b[sortCol];if(sortCol==='status'){va=STATUS_ORDER[va]??9;vb=STATUS_ORDER[vb]??9;}if(typeof va==='string')return sortDir*va.localeCompare(vb);return sortDir*(va-vb);});}
   function sortBy(col){
@@ -587,8 +588,9 @@
   function updateStats(){
     const a=getFiltered();
     document.getElementById('statTotal').textContent=a.length;
-    document.getElementById('statActive').textContent=a.filter(x=>['working','on_break','on_lunch'].includes(x.status)).length;
+    document.getElementById('statActive').textContent=a.filter(x=>['working','on_break','on_lunch','on_restroom'].includes(x.status)).length;
     document.getElementById('statAway').textContent=a.filter(x=>x.status==='on_break'||x.status==='on_lunch').length;
+    document.getElementById('statRestroom').textContent=a.filter(x=>x.status==='on_restroom').length;
     document.getElementById('statOut').textContent=a.filter(x=>x.status==='clocked_out').length;
     const avg=a.length?a.reduce((s,x)=>s+x.work_seconds,0)/a.length:0;
     document.getElementById('statAvg').textContent=a.length?fmtHMS(Math.floor(avg)):'—';
@@ -653,20 +655,20 @@
         byAgent[ev.agent_name][ev.event_date].push(ev);
       }
       // Build header
-      document.getElementById('weeklyHead').innerHTML='<tr><th>Agent</th>'+days.map((d,i)=>'<th>'+DAY_NAMES[i]+'<br><span style="font-weight:400;font-size:.65rem">'+d.slice(5)+'</span></th>').join('')+'<th>Total Work</th><th>Total Break</th><th>Total Lunch</th></tr>';
+      document.getElementById('weeklyHead').innerHTML='<tr><th>Agent</th>'+days.map((d,i)=>'<th>'+DAY_NAMES[i]+'<br><span style="font-weight:400;font-size:.65rem">'+d.slice(5)+'</span></th>').join('')+'<th>Total Work</th><th>Total Break</th><th>Total Lunch</th><th>Total Restroom</th></tr>';
       // Build rows
       const agents=Object.keys(byAgent).sort();
       if(!agents.length){document.getElementById('weeklyBody').innerHTML='<tr><td colspan="11" class="empty-state">No data for this week.</td></tr>';return;}
       document.getElementById('weeklyBody').innerHTML=agents.map(name=>{
-        let totalW=0,totalB=0,totalL=0;
+        let totalW=0,totalB=0,totalL=0,totalR=0;
         const dayCells=days.map(d=>{
           const evs=byAgent[name][d]||[];
           if(!evs.length)return'<td style="color:var(--muted);text-align:center">—</td>';
           const t=computeTotals(evs);
-          totalW+=t.work_seconds;totalB+=t.break_seconds;totalL+=t.lunch_seconds;
+          totalW+=t.work_seconds;totalB+=t.break_seconds;totalL+=t.lunch_seconds;totalR+=(t.restroom_seconds||0);
           return'<td><span class="tmono">'+fmtHMS(t.work_seconds)+'</span></td>';
         });
-        return'<tr><td class="agent-name">'+name+'</td>'+dayCells.join('')+'<td><span class="tmono" style="color:var(--green)">'+fmtHMS(totalW)+'</span></td><td><span class="tmono" style="color:var(--orange)">'+fmtHMS(totalB)+'</span></td><td><span class="tmono" style="color:var(--purple)">'+fmtHMS(totalL)+'</span></td></tr>';
+        return'<tr><td class="agent-name">'+name+'</td>'+dayCells.join('')+'<td><span class="tmono" style="color:var(--green)">'+fmtHMS(totalW)+'</span></td><td><span class="tmono" style="color:var(--orange)">'+fmtHMS(totalB)+'</span></td><td><span class="tmono" style="color:var(--purple)">'+fmtHMS(totalL)+'</span></td><td><span class="tmono" style="color:var(--teal)">'+fmtHMS(totalR)+'</span></td></tr>';
       }).join('');
     }catch(e){document.getElementById('weeklyBody').innerHTML='<tr><td colspan="11" class="empty-state">Could not load weekly data.</td></tr>';}
   }
@@ -675,7 +677,7 @@
     const days=getWeekDates(weekOffset);
     const DAY_NAMES=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
     const rows=document.querySelectorAll('#weeklyBody tr');
-    const csvRows=[['Agent',...days.map((d,i)=>DAY_NAMES[i]+' '+d),'Total Work','Total Break','Total Lunch']];
+    const csvRows=[['Agent',...days.map((d,i)=>DAY_NAMES[i]+' '+d),'Total Work','Total Break','Total Lunch','Total Restroom']];
     rows.forEach(row=>{
       const cells=[...row.querySelectorAll('td')].map(td=>td.textContent.trim());
       csvRows.push(cells);
