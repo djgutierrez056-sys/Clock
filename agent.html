@@ -210,12 +210,15 @@
       else if(ev.event_type==='break_end'){if(bst)bs+=(ts-bst)/1000;bst=null;ci=ts;status='working';}
       else if(ev.event_type==='lunch_start'){if(ci)ws+=(ts-ci)/1000;ci=null;lst=ts;status='on_lunch';}
       else if(ev.event_type==='lunch_end'){if(lst)ls+=(ts-lst)/1000;lst=null;ci=ts;status='working';}
+      else if(ev.event_type==='restroom_start'){if(ci)ws+=(ts-ci)/1000;ci=null;rst=ts;status='on_restroom';}
+      else if(ev.event_type==='restroom_end'){if(rst)rs+=(ts-rst)/1000;rst=null;ci=ts;status='working';}
     }
     const now=new Date();
     if(ci&&status==='working')ws+=Math.max(0,(now-ci)/1000);
     if(bst&&status==='on_break')bs+=Math.max(0,(now-bst)/1000);
     if(lst&&status==='on_lunch')ls+=Math.max(0,(now-lst)/1000);
-    return{work_seconds:Math.max(0,Math.floor(ws)),break_seconds:Math.max(0,Math.floor(bs)),lunch_seconds:Math.max(0,Math.floor(ls)),status};
+    if(rst&&status==='on_restroom')rs+=Math.max(0,(now-rst)/1000);
+    return{work_seconds:Math.max(0,Math.floor(ws)),break_seconds:Math.max(0,Math.floor(bs)),lunch_seconds:Math.max(0,Math.floor(ls)),restroom_seconds:Math.max(0,Math.floor(rs)),status};
   }
 
   async function loadStatus(name){
@@ -250,7 +253,7 @@
     document.getElementById('workTimer').textContent    =fmtHMS(tickBase.w+(state.status==='working'    ?el:0));
     document.getElementById('breakTimer').textContent   =fmtHMS(tickBase.b+(state.status==='on_break'   ?el:0));
     document.getElementById('lunchTimer').textContent   =fmtHMS(tickBase.l+(state.status==='on_lunch'   ?el:0));
-    document.getElementById('restroomTimer').textContent=fmtHMS(tickBase.r+(state.status==='on_restroom'?el:0));
+    document.getElementById('restroomTimer').textContent=fmtHMS((tickBase.r||0)+(state.status==='on_restroom'?el:0));
   }
 
   function mkBtn(label,cls,action){
