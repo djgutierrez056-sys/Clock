@@ -227,7 +227,7 @@
   }
 
   const STATUS_LABELS={working:'Working',on_break:'On Break',on_lunch:'On Lunch',on_restroom:'Restroom',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
-  const LOG_LABELS={clock_in:'Clocked In',clock_out:'Clocked Out',break_start:'Break Started',break_end:'Break Ended',lunch_start:'Lunch Started',lunch_end:'Lunch Ended',restroom_start:'Restroom',restroom_end:'Restroom Done'};
+  const LOG_LABELS={clock_in:'Clocked In',clock_out:'Clocked Out',break_start:'Break Started',break_end:'Break Ended',lunch_start:'Lunch Started',lunch_end:'Lunch Ended',restroom_start:'Restroom Started',restroom_end:'Restroom Done'};
 
   function applyState(data){
     state=data;
@@ -257,16 +257,18 @@
     b.textContent=label;b.onclick=()=>doAction(action);return b;
   }
   function renderButtons(status){
-    const c=document.getElementById('actionButtons');c.innerHTML='';
+    const c=document.getElementById('actionButtons');c.innerHTML='';c.style.gridTemplateColumns='1fr 1fr';
     if(status==='not_clocked_in'||status==='clocked_out'){c.appendChild(mkBtn('Clock In','btn-green','clock_in',true));}
     else if(status==='working'){
-      c.appendChild(mkBtn('Start Break','btn-orange','break_start'));
+      c.style.gridTemplateColumns='1fr 1fr 1fr';
+      c.appendChild(mkBtn('Break','btn-orange','break_start'));
       c.appendChild(mkBtn('Lunch','btn-purple','lunch_start'));
-      c.appendChild(mkBtn('🚻 Restroom','btn-teal','restroom_start'));
-      c.appendChild(mkBtn('Clock Out','btn-red','clock_out',true));
-    }else if(status==='on_break'){c.appendChild(mkBtn('End Break','btn-green','break_end',true));}
-    else if(status==='on_lunch'){c.appendChild(mkBtn('End Lunch','btn-purple','lunch_end',true));}
-    else if(status==='on_restroom'){c.appendChild(mkBtn('Done','btn-teal','restroom_end',true));}
+      c.appendChild(mkBtn('Restroom','btn-teal','restroom_start'));
+      const co=mkBtn('Clock Out','btn-red','clock_out',true);
+      c.appendChild(co);
+    }else if(status==='on_break'){c.style.gridTemplateColumns='1fr 1fr';c.appendChild(mkBtn('End Break','btn-green','break_end',true));}
+    else if(status==='on_lunch'){c.style.gridTemplateColumns='1fr 1fr';c.appendChild(mkBtn('End Lunch','btn-purple','lunch_end',true));}
+    else if(status==='on_restroom'){c.style.gridTemplateColumns='1fr 1fr';c.appendChild(mkBtn('End Restroom','btn-teal','restroom_end',true));}
   }
   function renderLog(events){
     const card=document.getElementById('logCard'),list=document.getElementById('logList');
