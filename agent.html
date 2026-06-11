@@ -35,11 +35,13 @@
   .pill-on_restroom{background:rgba(45,212,191,.15);color:var(--teal);border:1px solid var(--teal);}
   .pill-clocked_out{background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red);}
   .pill-not_clocked_in{background:rgba(138,160,189,.1);color:var(--muted);border:1px solid var(--border);}
-  .timers{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.75rem;}
+  .timers{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
   .timer-block .tl{font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem;}
   .timer-block .tv{font-family:'JetBrains Mono',monospace;font-size:1.15rem;font-weight:700;}
   .tv-work{color:var(--green);}.tv-break{color:var(--orange);}.tv-lunch{color:var(--purple);}.tv-restroom{color:var(--teal);}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem;}
+  .actions{display:flex;flex-direction:column;gap:.75rem;margin-top:1rem;}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;}
+  .btn-row-2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
   button.action-btn{width:100%;padding:.8rem 1rem;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:opacity .15s,transform .1s;}
   button.action-btn:hover:not(:disabled){opacity:.88;transform:translateY(-1px);}
   button.action-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
@@ -227,7 +229,7 @@
   }
 
   const STATUS_LABELS={working:'Working',on_break:'On Break',on_lunch:'On Lunch',on_restroom:'Restroom',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
-  const LOG_LABELS={clock_in:'Clocked In',clock_out:'Clocked Out',break_start:'Break Started',break_end:'Break Ended',lunch_start:'Lunch Started',lunch_end:'Lunch Ended',restroom_start:'Restroom Started',restroom_end:'Restroom Done'};
+  const LOG_LABELS={clock_in:'Clocked In',clock_out:'Clocked Out',break_start:'Break Started',break_end:'Break Ended',lunch_start:'Lunch Started',lunch_end:'Lunch Ended',restroom_start:'Restroom Started',restroom_end:'Restroom Ended'};
 
   function applyState(data){
     state=data;
@@ -251,24 +253,39 @@
     document.getElementById('restroomTimer').textContent=fmtHMS(tickBase.r+(state.status==='on_restroom'?el:0));
   }
 
-  function mkBtn(label,cls,action,full=false){
+  function mkBtn(label,cls,action){
     const b=document.createElement('button');
-    b.className='action-btn '+cls+(full?' btn-full':'');
+    b.className='action-btn '+cls;
+    b.style.width='100%';
     b.textContent=label;b.onclick=()=>doAction(action);return b;
   }
   function renderButtons(status){
-    const c=document.getElementById('actionButtons');c.innerHTML='';c.style.gridTemplateColumns='1fr 1fr';
-    if(status==='not_clocked_in'||status==='clocked_out'){c.appendChild(mkBtn('Clock In','btn-green','clock_in',true));}
-    else if(status==='working'){
-      c.style.gridTemplateColumns='1fr 1fr 1fr';
-      c.appendChild(mkBtn('Break','btn-orange','break_start'));
-      c.appendChild(mkBtn('Lunch','btn-purple','lunch_start'));
-      c.appendChild(mkBtn('Restroom','btn-teal','restroom_start'));
-      const co=mkBtn('Clock Out','btn-red','clock_out',true);
+    const c=document.getElementById('actionButtons');
+    c.innerHTML='';
+    c.style.cssText='display:flex;flex-direction:column;gap:.75rem;margin-top:1rem;';
+    if(status==='not_clocked_in'||status==='clocked_out'){
+      const b=mkBtn('Clock In','btn-green','clock_in');
+      b.style.width='100%';c.appendChild(b);
+    } else if(status==='working'){
+      const row=document.createElement('div');
+      row.style.cssText='display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;';
+      row.appendChild(mkBtn('Break','btn-orange','break_start'));
+      row.appendChild(mkBtn('Lunch','btn-purple','lunch_start'));
+      row.appendChild(mkBtn('Restroom','btn-teal','restroom_start'));
+      c.appendChild(row);
+      const co=mkBtn('Clock Out','btn-red','clock_out');
+      co.style.cssText='width:100%;display:block;';
       c.appendChild(co);
-    }else if(status==='on_break'){c.style.gridTemplateColumns='1fr 1fr';c.appendChild(mkBtn('End Break','btn-green','break_end',true));}
-    else if(status==='on_lunch'){c.style.gridTemplateColumns='1fr 1fr';c.appendChild(mkBtn('End Lunch','btn-purple','lunch_end',true));}
-    else if(status==='on_restroom'){c.style.gridTemplateColumns='1fr 1fr';c.appendChild(mkBtn('End Restroom','btn-teal','restroom_end',true));}
+    } else if(status==='on_break'){
+      const b=mkBtn('End Break','btn-green','break_end');
+      b.style.width='100%';c.appendChild(b);
+    } else if(status==='on_lunch'){
+      const b=mkBtn('End Lunch','btn-purple','lunch_end');
+      b.style.width='100%';c.appendChild(b);
+    } else if(status==='on_restroom'){
+      const b=mkBtn('End Restroom','btn-teal','restroom_end');
+      b.style.width='100%';c.appendChild(b);
+    }
   }
   function renderLog(events){
     const card=document.getElementById('logCard'),list=document.getElementById('logList');
