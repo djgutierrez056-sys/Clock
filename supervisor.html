@@ -66,9 +66,9 @@
   .dot-working{background:var(--green);box-shadow:0 0 6px var(--green);}
   .dot-on_break{background:var(--orange);box-shadow:0 0 6px var(--orange);}
   .dot-on_lunch{background:var(--purple);box-shadow:0 0 6px var(--purple);}
-  .dot-clocked_out{background:var(--red);}.dot-not_clocked_in{background:var(--muted);}
+  .dot-clocked_out{background:var(--red);}.dot-not_clocked_in{background:var(--muted);}.dot-on_restroom{background:var(--teal);box-shadow:0 0 6px var(--teal);}
   .status-text{font-size:.8rem;font-weight:500;display:flex;align-items:center;}
-  .status-text.working{color:var(--green)}.status-text.on_break{color:var(--orange)}.status-text.on_lunch{color:var(--purple)}.status-text.clocked_out{color:var(--red)}.status-text.not_clocked_in{color:var(--muted);}
+  .status-text.working{color:var(--green)}.status-text.on_break{color:var(--orange)}.status-text.on_lunch{color:var(--purple)}.status-text.on_restroom{color:var(--teal)}.status-text.clocked_out{color:var(--red)}.status-text.not_clocked_in{color:var(--muted);}
   .tmono{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:500;}
   .flag-badge{display:inline-block;background:rgba(239,68,68,.15);color:var(--red);border:1px solid var(--red);border-radius:5px;font-size:.65rem;font-weight:700;padding:.1rem .4rem;margin-left:.4rem;vertical-align:middle;}
   .empty-state{text-align:center;padding:3rem;color:var(--muted);font-size:.9rem;}
@@ -84,6 +84,7 @@
   .etype-clock_out{background:rgba(239,68,68,.15);color:var(--red);}
   .etype-break_start,.etype-break_end{background:rgba(245,158,11,.15);color:var(--orange);}
   .etype-lunch_start,.etype-lunch_end{background:rgba(167,139,250,.15);color:var(--purple);}
+  .etype-restroom_start,.etype-restroom_end{background:rgba(45,212,191,.15);color:var(--teal);}
   .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--green);color:var(--green);padding:.7rem 1.2rem;border-radius:8px;font-size:.85rem;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9999;}
   .toast.show{opacity:1;}
   .danger-zone{border-color:rgba(239,68,68,.3);}.danger-zone h2{color:rgba(239,68,68,.7);}
@@ -165,6 +166,7 @@
     <span><span class="dot" style="background:rgba(245,158,11,.3)"></span>Break/Lunch over warn threshold</span>
     <span><span class="dot" style="background:rgba(239,68,68,.25)"></span>Break/Lunch over max threshold</span>
     <span><span class="dot" style="background:rgba(239,68,68,.35);outline:1px solid rgba(239,68,68,.6)"></span>Still clocked in after alert time</span>
+    <span><span class="dot" style="background:rgba(45,212,191,.2)"></span>On restroom</span>
   </div>
   <br>
   <div class="table-wrap">
@@ -177,9 +179,10 @@
         <th onclick="sortBy('work_seconds')">Work Time</th>
         <th onclick="sortBy('break_seconds')">Break Time</th>
         <th onclick="sortBy('lunch_seconds')">Lunch Time</th>
+        <th onclick="sortBy('restroom_seconds')">Restroom</th>
         <th onclick="sortBy('total_seconds')">Total Clocked In</th>
       </tr></thead>
-      <tbody id="tableBody"><tr><td colspan="8" class="empty-state">Loading…</td></tr></tbody>
+      <tbody id="tableBody"><tr><td colspan="9" class="empty-state">Loading…</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -195,7 +198,7 @@
   </div>
   <div class="table-wrap">
     <table class="weekly-table">
-      <thead id="weeklyHead"><tr><td colspan="8" class="empty-state">Loading…</td></tr></thead>
+      <thead id="weeklyHead"><tr><td colspan="9" class="empty-state">Loading…</td></tr></thead>
       <tbody id="weeklyBody"></tbody>
     </table>
   </div>
@@ -305,6 +308,23 @@
       </div>
     </div>
     <div class="card">
+      <h2>Restroom Thresholds</h2>
+      <div class="setting-row">
+        <div><div class="setting-label">Warn after (minutes)</div><div class="setting-sub">Row turns orange</div></div>
+        <div class="setting-input">
+          <input type="number" id="restroomWarn" min="1" max="60" style="width:80px">
+          <button class="btn btn-orange btn-sm" onclick="saveSetting('restroom_warn_mins','restroomWarn')">Save</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Alert after (minutes)</div><div class="setting-sub">Row turns red</div></div>
+        <div class="setting-input">
+          <input type="number" id="restroomMax" min="1" max="60" style="width:80px">
+          <button class="btn btn-red btn-sm" onclick="saveSetting('restroom_max_mins','restroomMax')">Save</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
       <h2>Supervisor Password</h2>
       <div class="setting-row">
         <div><div class="setting-label">Change dashboard password</div><div class="setting-sub">Used to unlock this dashboard</div></div>
@@ -337,7 +357,7 @@
   const PW_ADMIN = "JGut@1432";
 
   // Settings cache
-  let cfg = { alert_time:'22:00', break_warn_mins:15, break_max_mins:30, lunch_warn_mins:45, lunch_max_mins:60, sup_password_hash:'LawftyAD' };
+  let cfg = { alert_time:'22:00', break_warn_mins:15, break_max_mins:30, lunch_warn_mins:45, lunch_max_mins:60, restroom_warn_mins:10, restroom_max_mins:15, sup_password_hash:'LawftyAD' };
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   function bzNow(){return new Date(Date.now()-6*3600000);}
@@ -407,6 +427,8 @@
       document.getElementById('breakMax').value=cfg.break_max_mins||30;
       document.getElementById('lunchWarn').value=cfg.lunch_warn_mins||45;
       document.getElementById('lunchMax').value=cfg.lunch_max_mins||60;
+      document.getElementById('restroomWarn').value=cfg.restroom_warn_mins||10;
+      document.getElementById('restroomMax').value=cfg.restroom_max_mins||15;
     }catch(e){}
   }
 
@@ -452,8 +474,8 @@
   function goToday(){document.getElementById('dateFilter').value=todayBZ();isToday=true;fetchData();}
 
   function computeTotals(events){
-    let ws=0,bs=0,ls=0,status='not_clocked_in',ci=null,bst=null,lst=null;
-    let firstClockIn=null,lastClockOut=null,currentBreakStart=null,currentLunchStart=null;
+    let ws=0,bs=0,ls=0,rs=0,status='not_clocked_in',ci=null,bst=null,lst=null,rst=null;
+    let firstClockIn=null,lastClockOut=null,currentBreakStart=null,currentLunchStart=null,currentRestroomStart=null;
     for(const ev of events){
       const ts=new Date(ev.timestamp.replace(' ','T')+'Z');
       if(ev.event_type==='clock_in'){if(!firstClockIn)firstClockIn=ev.timestamp;ci=ts;status='working';currentBreakStart=null;currentLunchStart=null;}
@@ -462,16 +484,20 @@
       else if(ev.event_type==='break_end'){if(bst)bs+=(ts-bst)/1000;bst=null;ci=ts;status='working';currentBreakStart=null;}
       else if(ev.event_type==='lunch_start'){if(ci)ws+=(ts-ci)/1000;ci=null;lst=ts;status='on_lunch';currentLunchStart=ts;}
       else if(ev.event_type==='lunch_end'){if(lst)ls+=(ts-lst)/1000;lst=null;ci=ts;status='working';currentLunchStart=null;}
+      else if(ev.event_type==='restroom_start'){if(ci)ws+=(ts-ci)/1000;ci=null;rst=ts;status='on_restroom';currentRestroomStart=ts;}
+      else if(ev.event_type==='restroom_end'){if(rst)rs+=(ts-rst)/1000;rst=null;ci=ts;status='working';currentRestroomStart=null;}
     }
     const now=new Date();
     if(ci&&status==='working')ws+=Math.max(0,(now-ci)/1000);
     if(bst&&status==='on_break')bs+=Math.max(0,(now-bst)/1000);
     if(lst&&status==='on_lunch')ls+=Math.max(0,(now-lst)/1000);
-    // Current break/lunch elapsed
+    if(rst&&status==='on_restroom')rs+=Math.max(0,(now-rst)/1000);
+    // Current break/lunch/restroom elapsed
     const breakElapsed=currentBreakStart?Math.floor((now-currentBreakStart)/1000):0;
     const lunchElapsed=currentLunchStart?Math.floor((now-currentLunchStart)/1000):0;
-    const total=ws+bs+ls;
-    return{work_seconds:Math.max(0,Math.floor(ws)),break_seconds:Math.max(0,Math.floor(bs)),lunch_seconds:Math.max(0,Math.floor(ls)),total_seconds:Math.max(0,Math.floor(total)),status,firstClockIn,lastClockOut,breakElapsed,lunchElapsed};
+    const restroomElapsed=currentRestroomStart?Math.floor((now-currentRestroomStart)/1000):0;
+    const total=ws+bs+ls+rs;
+    return{work_seconds:Math.max(0,Math.floor(ws)),break_seconds:Math.max(0,Math.floor(bs)),lunch_seconds:Math.max(0,Math.floor(ls)),restroom_seconds:Math.max(0,Math.floor(rs)),total_seconds:Math.max(0,Math.floor(total)),status,firstClockIn,lastClockOut,breakElapsed,lunchElapsed,restroomElapsed};
   }
 
   function getRowClass(agent){
@@ -484,6 +510,12 @@
       const mins=Math.floor(agent.breakElapsed/60);
       if(mins>=cfg.break_max_mins)return 'row-alert';
       if(mins>=cfg.break_warn_mins)return 'row-warn';
+    }
+    // Restroom color
+    if(agent.status==='on_restroom'){
+      const mins=Math.floor(agent.restroomElapsed/60);
+      if(mins>=cfg.restroom_max_mins)return 'row-alert';
+      if(mins>=cfg.restroom_warn_mins)return 'row-warn';
     }
     // Lunch color
     if(agent.status==='on_lunch'){
@@ -504,8 +536,8 @@
       const now=Date.now();
       allAgents=Object.entries(byAgent).map(([name,evs])=>{
         const t=computeTotals(evs);
-        tickAnchors[name]={base:{w:t.work_seconds,b:t.break_seconds,l:t.lunch_seconds,tot:t.total_seconds,be:t.breakElapsed,le:t.lunchElapsed},fetchedAt:now,status:t.status};
-        return{name,...t,work_fmt:fmtHMS(t.work_seconds),break_fmt:fmtHMS(t.break_seconds),lunch_fmt:fmtHMS(t.lunch_seconds),total_fmt:fmtHMS(t.total_seconds),clock_in_fmt:fmt12(t.firstClockIn),clock_out_fmt:t.lastClockOut?fmt12(t.lastClockOut):'—'};
+        tickAnchors[name]={base:{w:t.work_seconds,b:t.break_seconds,l:t.lunch_seconds,r:t.restroom_seconds,tot:t.total_seconds,be:t.breakElapsed,le:t.lunchElapsed,re:t.restroomElapsed},fetchedAt:now,status:t.status};
+        return{name,...t,work_fmt:fmtHMS(t.work_seconds),break_fmt:fmtHMS(t.break_seconds),lunch_fmt:fmtHMS(t.lunch_seconds),restroom_fmt:fmtHMS(t.restroom_seconds),total_fmt:fmtHMS(t.total_seconds),clock_in_fmt:fmt12(t.firstClockIn),clock_out_fmt:t.lastClockOut?fmt12(t.lastClockOut):'—'};
       });
       if(isToday)startLiveTick();else stopLiveTick();
       updateStats();renderTable();
@@ -522,7 +554,8 @@
         if(a.status==='working'){a.work_seconds=Math.max(0,anc.base.w+el);a.total_seconds=Math.max(0,anc.base.tot+el);}
         else if(a.status==='on_break'){a.break_seconds=Math.max(0,anc.base.b+el);a.total_seconds=Math.max(0,anc.base.tot+el);a.breakElapsed=Math.max(0,anc.base.be+el);}
         else if(a.status==='on_lunch'){a.lunch_seconds=Math.max(0,anc.base.l+el);a.total_seconds=Math.max(0,anc.base.tot+el);a.lunchElapsed=Math.max(0,anc.base.le+el);}
-        a.work_fmt=fmtHMS(a.work_seconds);a.break_fmt=fmtHMS(a.break_seconds);a.lunch_fmt=fmtHMS(a.lunch_seconds);a.total_fmt=fmtHMS(a.total_seconds);
+        else if(a.status==='on_restroom'){a.restroom_seconds=Math.max(0,anc.base.r+el);a.total_seconds=Math.max(0,anc.base.tot+el);a.restroomElapsed=Math.max(0,anc.base.re+el);}
+        a.work_fmt=fmtHMS(a.work_seconds);a.break_fmt=fmtHMS(a.break_seconds);a.lunch_fmt=fmtHMS(a.lunch_seconds);a.restroom_fmt=fmtHMS(a.restroom_seconds||0);a.total_fmt=fmtHMS(a.total_seconds);
       });
       renderTimerCells();updateStats();
     },1000);
@@ -534,19 +567,20 @@
       row.querySelector('.cell-work').textContent=a.work_fmt;
       row.querySelector('.cell-break').textContent=a.break_fmt;
       row.querySelector('.cell-lunch').textContent=a.lunch_fmt;
+      row.querySelector('.cell-restroom').textContent=a.restroom_fmt||'00:00:00';
       row.querySelector('.cell-total').textContent=a.total_fmt;
       // Update row color
       row.className=getRowClass(a);
     });
   }
 
-  const STATUS_ORDER={working:0,on_break:1,on_lunch:2,clocked_out:3,not_clocked_in:4};
-  const STATUS_LABELS={working:'Working',on_break:'On Break',on_lunch:'On Lunch',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
+  const STATUS_ORDER={working:0,on_break:1,on_lunch:2,on_restroom:3,clocked_out:4,not_clocked_in:5};
+  const STATUS_LABELS={working:'Working',on_break:'On Break',on_lunch:'On Lunch',on_restroom:'Restroom',clocked_out:'Clocked Out',not_clocked_in:'Not Clocked In'};
   function getFiltered(){const q=document.getElementById('searchFilter').value.trim().toLowerCase();return allAgents.filter(a=>!q||a.name.toLowerCase().includes(q));}
   function getSorted(agents){return[...agents].sort((a,b)=>{let va=a[sortCol],vb=b[sortCol];if(sortCol==='status'){va=STATUS_ORDER[va]??9;vb=STATUS_ORDER[vb]??9;}if(typeof va==='string')return sortDir*va.localeCompare(vb);return sortDir*(va-vb);});}
   function sortBy(col){
     sortDir=sortCol===col?sortDir*-1:1;sortCol=col;
-    const cols=['name','status',null,null,'work_seconds','break_seconds','lunch_seconds','total_seconds'];
+    const cols=['name','status',null,null,'work_seconds','break_seconds','lunch_seconds','restroom_seconds','total_seconds'];
     document.querySelectorAll('#tab-dashboard thead th').forEach((th,i)=>{th.classList.remove('sort-asc','sort-desc');if(cols[i]===col)th.classList.add(sortDir===1?'sort-asc':'sort-desc');});
     renderTable();
   }
@@ -561,7 +595,7 @@
   }
   function renderTable(){
     const agents=getSorted(getFiltered());const tbody=document.getElementById('tableBody');
-    if(!agents.length){tbody.innerHTML='<tr><td colspan="8" class="empty-state">No agents found.</td></tr>';return;}
+    if(!agents.length){tbody.innerHTML='<tr><td colspan="9" class="empty-state">No agents found.</td></tr>';return;}
     tbody.innerHTML=agents.map(a=>{
       const rc=getRowClass(a);
       const flagBadge=rc==='row-flagged'?'<span class="flag-badge">⚠ ALERT</span>':'';
@@ -573,6 +607,7 @@
         <td><span class="tmono cell-work">${a.work_fmt}</span></td>
         <td><span class="tmono cell-break">${a.break_fmt}</span></td>
         <td><span class="tmono cell-lunch">${a.lunch_fmt}</span></td>
+        <td><span class="tmono cell-restroom">${a.restroom_fmt||'00:00:00'}</span></td>
         <td><span class="tmono cell-total">${a.total_fmt}</span></td>
       </tr>`;
     }).join('');
@@ -580,8 +615,8 @@
   function exportCSV(){
     const day=document.getElementById('dateFilter').value;
     const agents=getSorted(getFiltered());
-    const rows=[['Agent','Status','Clock In','Clock Out','Work Time','Break Time','Lunch Time','Total Clocked In']];
-    agents.forEach(a=>rows.push([a.name,STATUS_LABELS[a.status]||a.status,a.clock_in_fmt,a.clock_out_fmt,a.work_fmt,a.break_fmt,a.lunch_fmt,a.total_fmt]));
+    const rows=[['Agent','Status','Clock In','Clock Out','Work Time','Break Time','Lunch Time','Restroom','Total Clocked In']];
+    agents.forEach(a=>rows.push([a.name,STATUS_LABELS[a.status]||a.status,a.clock_in_fmt,a.clock_out_fmt,a.work_fmt,a.break_fmt,a.lunch_fmt,a.restroom_fmt||'00:00:00',a.total_fmt]));
     const csv=rows.map(r=>r.map(v=>'"'+v+'"').join(',')).join('\n');
     const blob=new Blob([csv],{type:'text/csv'});const url=URL.createObjectURL(blob);
     const link=document.createElement('a');link.href=url;link.download='timereport_'+day+'.csv';link.click();URL.revokeObjectURL(url);
